@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LiveOSBOT</string>
+    <string name="IsActiveLabel">IsActive</string>
+    <string name="SkillLabel">Skill</string>
+    <string name="CollectingLabel">Collecting</string>
+    <string name="TotalCollectedLabel">Total Collected</string>
+    <string name="XpPerHourLabel">Xp Per Hour</string>
+    <string name="GpPerHourLabel">Gp Per Hour</string>
+
+    <string name="DefaultUsername">Player Name</string>
+    <string name="DefaultStatus">Offline</string>
+
+    <string name="BotIsOnline">Online</string>
+    <string name="BotIsActive">Yes</string>
+    <string name="BotIsNotActive">No</string>
+
+    </resources>

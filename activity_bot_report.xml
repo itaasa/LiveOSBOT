@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/botReportActivity"
+    tools:context="com.itaasa.liveosbot.BotReport">
+
+
+    <TextView
+        android:id="@+id/botNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/DefaultUsername"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+
+    <TextView
+        android:id="@+id/StatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/botNameTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/DefaultStatus"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/BotReportTableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/StatusTextView"
+        android:stretchColumns="1">
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/IsActiveLabel"
+                android:padding="3dip"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:id="@+id/IsActiveTextView"
+                android:text=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/SkillLabel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="3dip"/>
+
+            <TextView
+                android:id="@+id/SkillTextView"
+                android:text=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/CollectingLabel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="3dip"/>
+
+            <TextView
+                android:id="@+id/CollectingTextView"
+                android:text=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/TotalCollectedLabel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="3dip"/>
+
+            <TextView
+                android:id="@+id/TotalCollectedTextView"
+                android:text=""
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/XpPerHourLabel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="3dip"/>
+
+            <TextView
+                android:id="@+id/XpPerHourTextView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text=""
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="@string/GpPerHourLabel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="3dip"/>
+
+            <TextView
+                android:id="@+id/GpPerHourTextView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text=""
+                android:gravity="end"
+                android:padding="3dip"/>
+        </TableRow>
+
+    </TableLayout>
+
+</RelativeLayout>
