@@ -13,20 +13,20 @@ public class Test {
 		String inUser = "root";
 		String inPass = "";
 
-		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass);
+		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass, 12, 1511);
 				
 		while (true) {
 	
 			try {
-				x = db.updateNumOfItems(12, 377);
+				x = db.updateNumOfItems();
+				db.updateGPRate(x);
+				db.updateXPRate(x);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			System.out.println("Now updated NumOfItems with value: " + x);
-						
-			Thread.sleep(5000);
+			System.out.println("----------------------------------------------");
+			Thread.sleep(10000);
 		}
 	}
 

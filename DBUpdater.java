@@ -21,16 +21,18 @@ public class DBUpdater {
 	private PrintWriter pwBefore, pwAfter;
 	private String beforePath = System.getProperty("user.dir") + File.separator + "invCountAfter.txt";
 	private String afterPath = System.getProperty("user.dir") + File.separator + "invCountBefore.txt";
-
+	private int botID, itemID;
 	
-	public DBUpdater(String driver, String url, String user, String pass) {
+	public DBUpdater(String driver, String url, String user, String pass, int botID, int itemID) {
 		this.driver = driver;
 		this.url = url;
 		this.user = user;
 		this.pass = pass;
+		this.botID = botID;
+		this.itemID = itemID;
 	}
 	
-	public int updateNumOfItems(int botID, int itemID) throws Exception {
+	public int updateNumOfItems() throws Exception {
 		
 		PreparedStatement prepState = null;
 		Connection conn = null;
@@ -39,6 +41,8 @@ public class DBUpdater {
 		
 		int beforeValue = readInvCountBefore();
 		int afterValue = readInvCountAfter();
+		
+		int numCollected = beforeValue - afterValue;
 				
 		String obtainNumOfItems = "SELECT NumOfItems "
 								+ "FROM Report "
@@ -66,9 +70,9 @@ public class DBUpdater {
 		while (result.next())
 			numOfItems = result.getInt("NumOfItems");
 		
-		
-		numOfItems += afterValue - beforeValue;
-		
+		if (numCollected > 0)
+			numOfItems += numCollected;
+	
 		//Updating the current NumOfItems from the DB
 		prepState = conn.prepareStatement(updateNumOfItems);
 		prepState.setInt(1, numOfItems);
@@ -79,8 +83,12 @@ public class DBUpdater {
 		
 		//Resetting before value to after value
 		writeInvCountBefore(afterValue);
+		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
+				", NumOfItems)\t" + numCollected);
 		
-		return afterValue - beforeValue;
+		if (numCollected > 0)
+			return numCollected;
+		return 0;
 							
 	}
 	
@@ -153,14 +161,91 @@ public class DBUpdater {
 
 	}
 	
+	public int updateGPRate (int numCollected) throws Exception {
+		int gpRate = 0, gpPerItem = 0;
+		
+		Connection conn = null;
+		PreparedStatement prepState = null;
+		ResultSet result;
+		
+		//Obtaining the price per item with given itemID
+		String obtainGPPerItem = "SELECT ItemPrice "
+								+ "FROM Item "
+								+ "WHERE ItemID = ?";
+			
+		conn = getConnection();
+		prepState = conn.prepareStatement(obtainGPPerItem);
+		prepState.setInt(1, this.itemID);
+		result = prepState.executeQuery();
+		
+		while (result.next())
+			gpPerItem = result.getInt("ItemPrice");
+		
+		gpRate = (numCollected * 360) * gpPerItem;
+		
+		//Now we update the database with the calculated GPRate
+		String updateGPRate = "UPDATE Report "
+							+ "SET GpPerHour = ? "
+							+ "WHERE BotID = ? "
+							+ "AND ItemID = ?";
+		
+		prepState = conn.prepareStatement(updateGPRate);
+		prepState.setInt(1, gpRate);
+		prepState.setInt(2, this.botID);
+		prepState.setInt(3, this.itemID);
+		prepState.executeUpdate();
+		
+		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
+				", GpPerHour)\t" + gpRate);
+		
+		return gpRate;
+	}
+	
+	public int updateXPRate (int numCollected) throws Exception {
+		int xpRate = 0, xpPerItem = 0;
+		
+		Connection conn = null;
+		PreparedStatement prepState = null;
+		ResultSet result;
+		
+		//Obtaining the price per item with given itemID
+		String obtainXPPerItem = "SELECT ItemXp "
+								+ "FROM Item "
+								+ "WHERE ItemID = ?";
+			
+		conn = getConnection();
+		prepState = conn.prepareStatement(obtainXPPerItem);
+		prepState.setInt(1, this.itemID);
+		result = prepState.executeQuery();
+		
+		while (result.next())
+			xpPerItem = result.getInt("ItemXp");
+		
+		xpRate = (numCollected * 360) * xpPerItem;
+		
+		//Now we update the database with the calculated GPRate
+		String updateXPRate = "UPDATE Report "
+							+ "SET XpPerHour = ? "
+							+ "WHERE BotID = ? "
+							+ "AND ItemID = ?";
+		
+		prepState = conn.prepareStatement(updateXPRate);
+		prepState.setInt(1, xpRate);
+		prepState.setInt(2, this.botID);
+		prepState.setInt(3, this.itemID);
+		prepState.executeUpdate();
+		
+		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
+				", XpPerHour)\t" + xpRate);
+		
+		return xpRate;
+	}
+	
 	public Connection getConnection() throws Exception {
 		
 		try {
 			Class.forName(this.driver);
-			
-			Connection conn = DriverManager.getConnection(this.url, this.user, this.pass);
-			System.out.println("CONNECTED TO: " + url + ".");
-			
+			Connection conn = DriverManager.getConnection(this.url, this.user, this.pass);			
 			return conn;
 		
 		} catch (Exception e) {System.out.println (e);}

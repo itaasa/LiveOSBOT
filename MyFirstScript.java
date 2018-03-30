@@ -32,8 +32,8 @@ public class MyFirstScript extends Script implements Painting {
 	static String inUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
 	static String inUser = "root";
 	static String inPass = "";
-
-	static DBUpdater db = new DBUpdater (inDriver, inUrl, inUser, inPass);
+	static int botID = 12, itemID = 1511;
+	static DBUpdater db = new DBUpdater (inDriver, inUrl, inUser, inPass, botID, itemID);
 	
 	// code that needs to run before it runs the script
 	private boolean onStart() {
@@ -70,8 +70,6 @@ public class MyFirstScript extends Script implements Painting {
 
 	public int loop() {
 		
-		db.writeInvCountAfter(Inventory.getCount(LOGS));
-		
 		if (Inventory.isFull()) {
 			if(bankTrip()) 
 				println ("Smoke");
@@ -80,6 +78,8 @@ public class MyFirstScript extends Script implements Painting {
 
 		else {
 			if (Player.getRSPlayer().getAnimation() == -1) {
+				
+				db.writeInvCountAfter(Inventory.getCount(LOGS));
 				
 				if (!isNearTrees()) {
 					WebWalking.walkTo(treeArea.getRandomTile());
@@ -115,6 +115,7 @@ public class MyFirstScript extends Script implements Painting {
 				banker.click("Bank");
 				Banking.depositAllExcept(AXE);
 				Banking.close();
+				
 				return true;
 			}
 			
