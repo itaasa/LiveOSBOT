@@ -38,11 +38,15 @@ public class DBUpdater {
 		Connection conn = null;
 		ResultSet result;
 		int numOfItems = 0;
+		int numCollected;
 		
 		int beforeValue = readInvCountBefore();
 		int afterValue = readInvCountAfter();
 		
-		int numCollected = beforeValue - afterValue;
+		if (afterValue >= beforeValue)
+			numCollected = afterValue - beforeValue;
+		else
+			numCollected = 0;
 				
 		String obtainNumOfItems = "SELECT NumOfItems "
 								+ "FROM Report "
@@ -70,8 +74,7 @@ public class DBUpdater {
 		while (result.next())
 			numOfItems = result.getInt("NumOfItems");
 		
-		if (numCollected > 0)
-			numOfItems += numCollected;
+		numOfItems += numCollected;
 	
 		//Updating the current NumOfItems from the DB
 		prepState = conn.prepareStatement(updateNumOfItems);
@@ -83,12 +86,12 @@ public class DBUpdater {
 		
 		//Resetting before value to after value
 		writeInvCountBefore(afterValue);
-		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
-				", NumOfItems)\t" + numCollected);
 		
-		if (numCollected > 0)
-			return numCollected;
-		return 0;
+		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
+				", NumOfItems)\t+" + numCollected);
+		
+		
+		return numCollected;
 							
 	}
 	
@@ -196,7 +199,7 @@ public class DBUpdater {
 		prepState.executeUpdate();
 		
 		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
-				", GpPerHour)\t" + gpRate);
+				", GpPerHour)\t " + gpRate);
 		
 		return gpRate;
 	}
@@ -236,7 +239,7 @@ public class DBUpdater {
 		prepState.executeUpdate();
 		
 		System.out.println("UPDATED REPORT(" +this.botID+", " + this.itemID + 
-				", XpPerHour)\t" + xpRate);
+				", XpPerHour)\t " + xpRate);
 		
 		return xpRate;
 	}
