@@ -38,7 +38,7 @@ public class BotReport extends AppCompatActivity implements AsyncResponse{
         tViewGpPerHour = findViewById(R.id.GpPerHourTextView);
 
         PostResponseAsyncTask readTask =  new PostResponseAsyncTask(BotReport.this, this);
-        readTask.execute("http://10.0.2.2/liveosbot/botreportdata.php");
+        readTask.execute("http://REPLACEWITHIP4VADDRESS/liveosbot/botreportdata.php");
 
     }
 
