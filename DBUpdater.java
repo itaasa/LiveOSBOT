@@ -32,6 +32,25 @@ public class DBUpdater {
 		this.itemID = itemID;
 	}
 	
+	public void databaseProc() throws InterruptedException, IOException{
+		
+		int numCollected;	
+		
+		System.out.println();
+		System.out.println("----------------------------------------------");
+		try {
+			numCollected = updateNumOfItems();
+			updateGPRate(numCollected);
+			updateXPRate(numCollected);	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("----------------------------------------------");
+		Thread.sleep(10000);
+	}
+	
 	public int updateNumOfItems() throws Exception {
 		
 		PreparedStatement prepState = null;
@@ -164,7 +183,7 @@ public class DBUpdater {
 
 	}
 	
-	public int updateGPRate (int numCollected) throws Exception {
+	private int updateGPRate (int numCollected) throws Exception {
 		int gpRate = 0, gpPerItem = 0;
 		
 		Connection conn = null;
@@ -204,7 +223,7 @@ public class DBUpdater {
 		return gpRate;
 	}
 	
-	public int updateXPRate (int numCollected) throws Exception {
+	private int updateXPRate (int numCollected) throws Exception {
 		int xpRate = 0, xpPerItem = 0;
 		
 		Connection conn = null;

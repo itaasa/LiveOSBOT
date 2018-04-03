@@ -14,19 +14,9 @@ public class Test {
 		String inPass = "";
 
 		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass, 12, 1511);
-				
-		while (true) {
-	
-			try {
-				x = db.updateNumOfItems();
-				db.updateGPRate(x);
-				db.updateXPRate(x);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("----------------------------------------------");
-			Thread.sleep(10000);
+		
+		while (true){
+			db.databaseProc();
 		}
 	}
 
