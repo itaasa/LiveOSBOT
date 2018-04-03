@@ -33,13 +33,13 @@ public class NormalTreeWoodcutter extends Script {
 	static DBUpdater db = new DBUpdater (
 			"com.mysql.jdbc.Driver",
 			"jdbc:mysql://localhost:3306/liveosbotdb",
-			"root", "", 12, 1511);
+			"root", "");
 	
 	public boolean onStart() {
 		
 		//Setting the inventory text files counts to the current inventory count of the bot
-		db.writeInvCountAfter(Inventory.getCount(LOG_ID));
-		db.writeInvCountBefore(Inventory.getCount(LOG_ID));
+		db.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
+		db.writeBefore(Inventory.getCount(LOG_ID), 0, 1511);
 		return true;
 	}
 	
@@ -54,7 +54,7 @@ public class NormalTreeWoodcutter extends Script {
 	
 	private boolean loop ()
 	{
-		db.writeInvCountAfter(Inventory.getCount(LOG_ID));
+		db.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
 		
 		//First we check if bot has a full inventory, if so we must deposit excess items to the nearest bank
 		if (Inventory.isFull()){
