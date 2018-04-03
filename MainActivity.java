@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         //Connecting to our database
         PostResponseAsyncTask connectTask = new PostResponseAsyncTask(MainActivity.this, this);
-        connectTask.execute("http://10.0.2.2/liveosbot/login.php");
+        connectTask.execute("http://REPLACEWITHIP4VADDRESS/liveosbot/login.php");
 
     }
 
