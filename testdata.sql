@@ -32,7 +32,7 @@ INSERT INTO BOT (BotID, BotName, IsActive, IsOnline, SkillID)
   (8, 'RackCityBot', 1, 1, 10),
   (9, 'RudeRob2008', 1, 1, 8),
   (10, 'Fishgutz', 1, 1, 8),
-  (11, 'Microwave', 1, 1, 14)
+  (11, 'Microwave', 1, 1, 14),
   (12, 'SoppingMost', 1, 1, 14);
 
 
