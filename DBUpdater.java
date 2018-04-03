@@ -244,7 +244,7 @@ public class DBUpdater {
 			
 		conn = getConnection();
 		prepState = conn.prepareStatement(obtainGPPerItem);
-		prepState.setInt(1, botId);
+		prepState.setInt(1, itemId);
 		result = prepState.executeQuery();
 		
 		while (result.next())
