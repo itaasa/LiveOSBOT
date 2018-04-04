@@ -17,7 +17,6 @@ public class Test {
 		
 		displayHeaderText();
 		pressAnyKeyToContinue();
-		
 		while (true){
 			db.executeProc();
 		}
@@ -49,7 +48,7 @@ public class Test {
 	
 	 public static void pressAnyKeyToContinue()
 	 { 
-	        System.out.println("Press Enter key to continue...");
+	        System.out.println("Press the enter to key to continue...");
 	        try
 	        {
 	            System.in.read();

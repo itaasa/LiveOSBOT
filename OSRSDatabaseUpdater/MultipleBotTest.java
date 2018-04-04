@@ -1,5 +1,9 @@
 package scripts;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 public class MultipleBotTest {
@@ -15,7 +19,6 @@ public class MultipleBotTest {
 		int[][] keyArray = db.getReportKeys();
 		int numOfKeys = db.getNumOfReportKeys();
 		
-
 		while (true) {
 			
 			for (int i=0; i<numOfKeys; i++) {
@@ -27,5 +30,6 @@ public class MultipleBotTest {
 			
 			Thread.sleep(5000);
 		}
+		
 	}
 }
