@@ -36,29 +36,33 @@ public class DBUpdater {
 	public void executeProc() throws Exception{
 		
 		int [][] reportKeys = getReportKeys();
+		int [] totalItemsCollected = getTotalNumOfItems();
+		
 		String [] botNames = getBotNames();
 		String [] itemNames = getItemNames();
 		String botName, itemName;
 		
-		int numOfItems, gpRate, xpRate, numOfKeys = getNumOfReportKeys(), botId, itemId;
-		System.out.println("||------------------------------------------------------------------------------------------------------------------------------||");
+		int totalNumOfItems, numOfItems, gpRate, xpRate, numOfKeys = getNumOfReportKeys(), 
+				botId, itemId;
+		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
 		System.out.println("||\tBot ID\t||"
 							+ "\tItem ID\t||"
 							+ "\t" + String.format("%-20s", "BotName") + "||"
 							+ "\t" + String.format("%-20s", "ItemName") + "||"
-							+ "\tCount\t||"
+							+ "\t\tCount\t\t||"
 							+ "\tGP/Hour\t||"
 							+ "\tXP/Hour\t||");
-		System.out.println("||------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i=0; i<numOfKeys; i++) {
 			
 			botId = reportKeys[i][0];
 			itemId = reportKeys[i][1];
 			botName = botNames[i];
-			itemName = itemNames[i];
+			itemName = itemNames[i];	
 			
 			numOfItems = updateNumOfItems(botId, itemId);
+			totalNumOfItems = totalItemsCollected[i];
 			gpRate = updateGPRate(numOfItems, botId, itemId);
 			xpRate = updateXPRate(numOfItems, botId, itemId);
 			
@@ -66,13 +70,13 @@ public class DBUpdater {
 								"|\t" + itemId + "\t|" + 
 								"|\t" + String.format("%-20s", botName) + "|" +
 								"|\t" + String.format("%-20s", itemName) + "|" +
-								"|\t" + numOfItems + "\t|" + 
+								"|\t\t" + totalNumOfItems + " (+" + numOfItems + ")" + "\t\t|" + 
 								"|\t" + gpRate + "\t|" +
 								"|\t" + xpRate + "\t||");			
 		}
 		
-		System.out.println("||------------------------------------------------------------------------------------------------------------------------------||");
-		Thread.sleep(5000);
+		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
+		Thread.sleep(7000);
 	}
 	
 	//Writes to "invCountAfter_botId_itemId.txt" the current inventory count of the bot with id=botId 
@@ -237,32 +241,56 @@ public class DBUpdater {
 		PreparedStatement prepState = null;
 		ResultSet result;
 		
-		//Obtaining the price per item with given itemID
-		String obtainGPPerItem = "SELECT ItemPrice "
-								+ "FROM Item "
-								+ "WHERE ItemID = ?";
-			
 		conn = getConnection();
-		prepState = conn.prepareStatement(obtainGPPerItem);
-		prepState.setInt(1, itemId);
-		result = prepState.executeQuery();
 		
-		while (result.next())
-			gpPerItem = result.getInt("ItemPrice");
+		if (numCollected != 0) {
+			
+			//Obtaining the price per item with given itemID
+			String obtainGPPerItem = "SELECT ItemPrice "
+									+ "FROM Item "
+									+ "WHERE ItemID = ?";
+				
+			prepState = conn.prepareStatement(obtainGPPerItem);
+			prepState.setInt(1, itemId);
+			result = prepState.executeQuery();
+			
+			while (result.next())
+				gpPerItem = result.getInt("ItemPrice");
 		
-		gpRate = (numCollected * 360) * gpPerItem;
+			gpRate = (numCollected * 360) * gpPerItem;
+			
+			
+			//Now we update the database with the calculated GPRate
+			String updateGPRate = "UPDATE Report "
+								+ "SET GpPerHour = ? "
+								+ "WHERE BotID = ? "
+								+ "AND ItemID = ?";
+			
+			prepState = conn.prepareStatement(updateGPRate);
+			prepState.setInt(1, gpRate);
+			prepState.setInt(2, botId);
+			prepState.setInt(3, itemId);
+			prepState.executeUpdate();		
+		} 
 		
-		//Now we update the database with the calculated GPRate
-		String updateGPRate = "UPDATE Report "
-							+ "SET GpPerHour = ? "
-							+ "WHERE BotID = ? "
-							+ "AND ItemID = ?";
-		
-		prepState = conn.prepareStatement(updateGPRate);
-		prepState.setInt(1, gpRate);
-		prepState.setInt(2, botId);
-		prepState.setInt(3, itemId);
-		prepState.executeUpdate();
+		else {
+			
+			//Gets the past rate when numCollected was non-zero integer
+			String obtainGPRate = "SELECT GpPerHour "
+								+ "FROM Report "
+								+ "WHERE BotID = ? "
+								+ "AND ItemID = ?";
+			
+			conn = getConnection();
+			prepState = conn.prepareStatement(obtainGPRate);
+			prepState.setInt(1, botId);
+			prepState.setInt(2, itemId);
+			result = prepState.executeQuery();
+			
+			while(result.next())
+				gpRate = result.getInt("GpPerHour");
+			
+		}
 				
 		return gpRate;
 	}
@@ -275,33 +303,53 @@ public class DBUpdater {
 		PreparedStatement prepState = null;
 		ResultSet result;
 		
-		//Obtaining the price per item with given itemID
-		String obtainXPPerItem = "SELECT ItemXp "
-								+ "FROM Item "
-								+ "WHERE ItemID = ?";
-			
 		conn = getConnection();
-		prepState = conn.prepareStatement(obtainXPPerItem);
-		prepState.setInt(1, itemId);
-		result = prepState.executeQuery();
 		
-		while (result.next())
-			xpPerItem = result.getInt("ItemXp");
-		
-		xpRate = (numCollected * 360) * xpPerItem;
-		
-		//Now we update the database with the calculated GPRate
-		String updateXPRate = "UPDATE Report "
-							+ "SET XpPerHour = ? "
-							+ "WHERE BotID = ? "
-							+ "AND ItemID = ?";
-		
-		prepState = conn.prepareStatement(updateXPRate);
-		prepState.setInt(1, xpRate);
-		prepState.setInt(2,botId);
-		prepState.setInt(3, itemId);
-		prepState.executeUpdate();
+		if (numCollected != 0) {
+		//Obtaining the price per item with given itemID
+			String obtainXPPerItem = "SELECT ItemXp "
+									+ "FROM Item "
+									+ "WHERE ItemID = ?";
 				
+			prepState = conn.prepareStatement(obtainXPPerItem);
+			prepState.setInt(1, itemId);
+			result = prepState.executeQuery();
+			
+			while (result.next())
+				xpPerItem = result.getInt("ItemXp");
+			
+			xpRate = (numCollected * 360) * xpPerItem;
+			
+			//Now we update the database with the calculated GPRate
+			String updateXPRate = "UPDATE Report "
+								+ "SET XpPerHour = ? "
+								+ "WHERE BotID = ? "
+								+ "AND ItemID = ?";
+			
+			prepState = conn.prepareStatement(updateXPRate);
+			prepState.setInt(1, xpRate);
+			prepState.setInt(2,botId);
+			prepState.setInt(3, itemId);
+			prepState.executeUpdate();
+			
+		}
+		
+		else {
+			//Gets the past rate when numCollected was non-zero integer
+			String obtainGPRate = "SELECT XpPerHour "
+								+ "FROM Report "
+								+ "WHERE BotID = ? "
+								+ "AND ItemID = ?";
+			
+			prepState = conn.prepareStatement(obtainGPRate);
+			prepState.setInt(1, botId);
+			prepState.setInt(2, itemId);
+			result = prepState.executeQuery();
+			
+			while(result.next())
+				xpRate = result.getInt("XpPerHour");
+			
+		}
 		return xpRate;
 	}
 	
@@ -354,6 +402,34 @@ public class DBUpdater {
 			i++;
 		}
 		return itemNames;
+	}
+	
+	//Gets all total collected items given the botId and the itemId of all active bots
+	public int [] getTotalNumOfItems () throws Exception {
+		
+		Connection conn = null;
+		PreparedStatement prepState = null;
+		ResultSet result;
+		int numOfKeys = getNumOfReportKeys();
+		
+		int [] totalItems = new int [numOfKeys];
+		
+		String obtainNumOfItems =  "SELECT NumOfItems " 
+								+ "FROM Report";
+		
+		conn = getConnection();
+		prepState = conn.prepareStatement(obtainNumOfItems);
+		result = prepState.executeQuery();
+		
+		int i=0;
+		
+		while (result.next()) {
+			totalItems[i] = result.getInt("NumOfItems");
+			i++;
+		}
+		
+		return totalItems;
+		
 	}
 	
 	//Returns the number of tuples in the relation REPORT. In otherwords the number of active bots

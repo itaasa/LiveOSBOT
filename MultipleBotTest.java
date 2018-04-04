@@ -5,8 +5,6 @@ import java.util.Random;
 public class MultipleBotTest {
 	public static void main(String args[]) throws Exception {
 		
-		int x = 0;
-		
 		String inDriver = "com.mysql.jdbc.Driver";
 		String inUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
 		String inUser = "root";
@@ -16,6 +14,7 @@ public class MultipleBotTest {
 		
 		int[][] keyArray = db.getReportKeys();
 		int numOfKeys = db.getNumOfReportKeys();
+		
 
 		while (true) {
 			
@@ -23,6 +22,7 @@ public class MultipleBotTest {
 				int botId = keyArray[i][0], itemId = keyArray[i][1];
 				int randomNumColl = r.nextInt(3);
 				db.writeAfter(randomNumColl, botId, itemId);
+				//System.out.println("HELLO");
 			}
 			
 			Thread.sleep(5000);
