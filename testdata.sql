@@ -49,5 +49,5 @@ INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour)
   (8, 377, 0, 0, 0),
   (9, 1515, 0, 0, 0),
   (10, 1519, 0, 0, 0),
-  (11, 440, 0, 0, 0)
+  (11, 440, 0, 0, 0),
   (12, 447, 0, 0, 0);
