@@ -35,7 +35,8 @@ INSERT INTO BOT (BotID, BotName, IsActive, IsOnline, SkillID)
   (11, 'Microwave', 1, 1, 14),
   (12, 'SoppingMost', 1, 1, 14),
   (13, 'Squatch Dad', 1, 1, 8),
-  (14, 'VeganGirl33', 1, 1, 14);
+  (14, 'VeganGirl33', 1, 1, 14),
+  (15, 'Nick Veggie', 1, 1, 14);
 
 
 INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour)
@@ -54,4 +55,5 @@ INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour)
   (11, 440, 0, 0, 0),
   (12, 447, 0, 0, 0),
   (13, 1515, 0, 0, 0),
-  (14, 453, 0, 0, 0);
+  (14, 453, 0, 0, 0),
+  (15, 447, 0, 0, 0);
