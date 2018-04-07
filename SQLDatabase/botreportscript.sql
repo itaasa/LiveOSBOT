@@ -4,6 +4,7 @@ CREATE TABLE BOT (
   IsActive boolean,
   IsOnline boolean,
   SkillID int,
+  World char(3),
   PRIMARY KEY (BotID)
 );
 
