@@ -18,8 +18,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         //Connecting to our database
         PostResponseAsyncTask connectTask = new PostResponseAsyncTask(MainActivity.this, this);
-        connectTask.execute("http://REPLACEWITHIP4VADDRESS/liveosbot/login.php");
-
+        connectTask.execute("http://192.168.56.1/liveosbot/login.php");
     }
 
     @Override
@@ -29,8 +28,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         else
             Toast.makeText(this, "Connection to database failed.", Toast.LENGTH_LONG).show();
 
-
-        Intent in = new Intent (MainActivity.this, BotReport.class);
+        Intent in = new Intent (MainActivity.this, LobbyActivity.class);
         startActivity(in);
     }
 

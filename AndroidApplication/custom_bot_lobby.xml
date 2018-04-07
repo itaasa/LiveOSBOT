@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding = "3dip"
+    android:background="@color/colorViewDark">
+
+    <Button
+        android:id="@+id/botLobbyButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:focusable="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/lobbyBotName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="3dip"
+        android:textColor="@color/colorBotLobbyText"
+        android:textSize="20sp"
+        android:text="@string/DefaultUsername" />
+
+    <TextView
+        android:id="@+id/botWorldHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lobbyBotName"
+        android:padding="3dip"
+        android:textColor="@color/colorBotLobbyText"
+        android:textSize="12sp"
+        android:text="@string/WorldHeader" />
+
+    <TextView
+        android:id="@+id/botWorld"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lobbyBotName"
+        android:layout_toRightOf="@id/botWorldHeader"
+        android:layout_toEndOf="@id/botWorldHeader"
+        android:text="@string/DefaultWorld"
+        android:padding="3dip"
+        android:textColor="@color/colorBotLobbyText"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/statusImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:contentDescription="@string/ImageDescription"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_online_status" />
+
+</RelativeLayout>

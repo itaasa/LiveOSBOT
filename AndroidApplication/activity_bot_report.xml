@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/botReportActivity"
-    tools:context="com.itaasa.liveosbot.BotReport">
+    android:background="@color/colorViewDark"
+    android:padding = "50dp"
+    tools:context="com.itaasa.liveosbot.BotReportActivity">
 
 
     <TextView
@@ -16,7 +18,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:text="@string/DefaultUsername"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+        android:textColor="@color/colorBotLobbyText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <TextView
         android:id="@+id/StatusTextView"
@@ -26,6 +29,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="@string/DefaultStatus"
+        android:textColor="@color/colorOnlineText"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,11 +44,13 @@
                 android:layout_column="1"
                 android:text="@string/IsActiveLabel"
                 android:padding="3dip"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
             <TextView
                 android:id="@+id/IsActiveTextView"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:gravity="end"
                 android:padding="3dip"/>
@@ -54,12 +60,14 @@
             <TextView
                 android:layout_column="1"
                 android:text="@string/SkillLabel"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:padding="3dip"/>
 
             <TextView
                 android:id="@+id/SkillTextView"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:gravity="end"
                 android:padding="3dip"/>
@@ -69,12 +77,14 @@
             <TextView
                 android:layout_column="1"
                 android:text="@string/CollectingLabel"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:padding="3dip"/>
 
             <TextView
                 android:id="@+id/CollectingTextView"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:gravity="end"
                 android:padding="3dip"/>
@@ -84,12 +94,14 @@
             <TextView
                 android:layout_column="1"
                 android:text="@string/TotalCollectedLabel"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:padding="3dip"/>
 
             <TextView
                 android:id="@+id/TotalCollectedTextView"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:gravity="end"
                 android:padding="3dip"/>
@@ -99,6 +111,7 @@
             <TextView
                 android:layout_column="1"
                 android:text="@string/XpPerHourLabel"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:padding="3dip"/>
 
@@ -106,6 +119,7 @@
                 android:id="@+id/XpPerHourTextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:gravity="end"
                 android:padding="3dip"/>
         </TableRow>
@@ -114,6 +128,7 @@
             <TextView
                 android:layout_column="1"
                 android:text="@string/GpPerHourLabel"
+                android:textColor="@color/colorBotLobbyText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:padding="3dip"/>
 
@@ -121,10 +136,20 @@
                 android:id="@+id/GpPerHourTextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text=""
+                android:textColor="@color/colorBotLobbyText"
                 android:gravity="end"
                 android:padding="3dip"/>
         </TableRow>
 
     </TableLayout>
+
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="116dp"
+        android:text="Refresh" />
 
 </RelativeLayout>

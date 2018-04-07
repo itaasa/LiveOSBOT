@@ -13,5 +13,8 @@
     <string name="BotIsOnline">Online</string>
     <string name="BotIsActive">Yes</string>
     <string name="BotIsNotActive">No</string>
+    <string name="WorldHeader">World </string>
+    <string name="DefaultWorld">001</string>
+    <string name="ImageDescription">Status</string>
 
     </resources>
