@@ -19,24 +19,24 @@ INSERT INTO ITEM (ItemID, ItemName, ItemXP, ItemPrice, SkillID)
   (447, 'Mithril ore', 80, 175, 14);
 
 
-INSERT INTO BOT (BotID, BotName, IsActive, IsOnline, SkillID)
+INSERT INTO BOT (BotID, BotName, IsActive, IsOnline, SkillID, World)
   VALUES
-  (0, 'Polygon' , 1, 1, 10),
-  (1, 'Pangwin' , 1, 1, 8),
-  (2, 'LebronJames' , 1, 1, 10),
-  (3, 'James Bot' , 1, 1, 10),
-  (4, 'Vcheckz1337', 1, 1, 14),
-  (5, 'Happy4Horses', 1, 1, 14),
-  (6, 'RickCaron', 1, 1, 8),
-  (7, 'Kate', 1, 1, 14),
-  (8, 'RackCityBot', 1, 1, 10),
-  (9, 'RudeRob2008', 1, 1, 8),
-  (10, 'Fishgutz', 1, 1, 8),
-  (11, 'Microwave', 1, 1, 14),
-  (12, 'SoppingMost', 1, 1, 14),
-  (13, 'Squatch Dad', 1, 1, 8),
-  (14, 'VeganGirl33', 1, 1, 14),
-  (15, 'Nick Veggie', 1, 1, 14);
+  (0, 'Polygon' , 1, 1, 10, 133),
+  (1, 'Pangwin' , 1, 1, 8, 123),
+  (2, 'LebronJames' , 1, 1, 10, 222),
+  (3, 'James Bot' , 1, 1, 10, 314),
+  (4, 'Vcheckz1337', 1, 1, 14, 432),
+  (5, 'Happy4Horses', 1, 1, 14, 111),
+  (6, 'RickCaron', 1, 1, 8, 008),
+  (7, 'Kate', 1, 1, 14, 155),
+  (8, 'RackCityBot', 1, 1, 10, 010),
+  (9, 'RudeRob2008', 1, 1, 8, 003),
+  (10, 'Fishgutz', 1, 1, 8, 001),
+  (11, 'Microwave', 1, 1, 14, 221),
+  (12, 'SoppingMost', 1, 1, 14, 343),
+  (13, 'Squatch Dad', 1, 1, 8, 100),
+  (14, 'VeganGirl33', 1, 1, 14, 055),
+  (15, 'Nick Veggie', 1, 1, 14, 098);
 
 
 INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour)
