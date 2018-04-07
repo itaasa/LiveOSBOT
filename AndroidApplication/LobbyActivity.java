@@ -28,7 +28,7 @@ public class LobbyActivity  extends AppCompatActivity implements AsyncResponse {
         setContentView(R.layout.activity_lobby);
 
         PostResponseAsyncTask taskRead = new PostResponseAsyncTask(LobbyActivity.this, this);
-        taskRead.execute("http://192.168.56.1/liveosbot/lobbybotdata.php");
+        taskRead.execute("http://IPV4ADDRESS/liveosbot/lobbybotdata.php");
     }
 
     @Override
