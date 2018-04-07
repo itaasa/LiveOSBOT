@@ -2,7 +2,7 @@
   $servername = "localhost";
   $username = "root";
   $password = "";
-  $dbname = "bot_report";
+  $dbname = "liveosbotdb";
   $conn = mysqli_connect ($servername, $username, $password, $dbname);
 
   if (!$conn){
