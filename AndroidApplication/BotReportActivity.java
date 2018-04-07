@@ -62,7 +62,7 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
             postData.put("inputItemID", itemId);
 
             PostResponseAsyncTask readTask = new PostResponseAsyncTask(BotReportActivity.this, postData, BotReportActivity.this);
-            readTask.execute("http://192.168.56.1/liveosbot/botreportdata.php");
+            readTask.execute("http://IPV4ADDRESS/liveosbot/botreportdata.php");
         }
 
         else {
