@@ -17,10 +17,15 @@ public class Test {
 		
 		displayHeaderText();
 		pressAnyKeyToContinue();
+		
+		db.preProc();
+		
+		
 		while (true){
 			db.executeProc();
 		}
 	}
+	
 	
 	public static void displayHeaderText () {
 		FileReader fr;

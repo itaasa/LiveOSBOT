@@ -478,7 +478,56 @@ public class DBUpdater {
 		return reportKeys;
 	}
 	
-	//Connects to the database
+	//Checks if any invCount text files with corresponding botId and itemId are missing
+	//if so, this method will create them
+	private void invCountExists (int botId, int itemId) throws IOException {
+		String afterPathString = System.getProperty("user.dir") + File.separator + 
+				"tempdata" + File.separator + "invCountAfter" + "_" + botId + "_"
+				+ itemId + ".txt";
+		
+		String beforePathString =  System.getProperty("user.dir") + File.separator + 
+				"tempdata" + File.separator + "invCountBefore" + "_" + botId + "_"
+				+ itemId + ".txt";
+		
+		File afterFile = new File (afterPathString);
+		File beforeFile = new File (beforePathString);
+		
+		if (!afterFile.isFile()){
+			System.out.println("Missing invCountAFTER textfile for bot: " + botId + ", collecting item: " + itemId);
+			System.out.println("Now creating that file...\n");
+			afterFile.createNewFile();
+		}
+		
+		
+		if (!beforeFile.isFile()){
+			System.out.println("Missing invCountBEFORE textfile for bot: " + botId + ", collecting item: " + itemId);
+			System.out.println("Now creating that file...\n");
+			beforeFile.createNewFile();
+		}
+		
+	}
+	
+	//Creates all necessary files not already created
+	//Calls on invCountExists for all existing botId and itemId in database
+	public void preProc() throws Exception {
+		
+		int [][] reportKeys = getReportKeys();
+		
+		System.out.println("Now checking if necessary files exist...");
+		Thread.sleep(2000);
+		
+		for (int i=0; i<getNumOfReportKeys(); i++){
+			invCountExists(reportKeys[i][0], reportKeys[i][1]);
+		}
+		
+		System.out.println("All necessary files exists! Now starting application...");
+		Thread.sleep(3000);
+		System.out.println();
+		System.out.println();
+		
+	}
+	
+	//Establishes connection to the database
 	public Connection getConnection() throws Exception {
 		
 		try {
@@ -490,5 +539,6 @@ public class DBUpdater {
 		
 		return null;
 	}
+	
 	
 }
