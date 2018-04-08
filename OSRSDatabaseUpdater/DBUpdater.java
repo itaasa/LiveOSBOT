@@ -84,7 +84,7 @@ public class DBUpdater {
 	public void writeAfter (int invCount, int botId, int itemId) {
 		
 		String afterPath = System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountAfter" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		try {
@@ -103,7 +103,7 @@ public class DBUpdater {
 	public void writeBefore (int invCount, int botId, int itemId) {
 		
 		String beforePath = System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountBefore" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		try {
@@ -121,7 +121,7 @@ public class DBUpdater {
 	private int readAfter (int botId, int itemId) {
 		
 		String afterPath = System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountAfter" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		int result = 0;
@@ -149,7 +149,7 @@ public class DBUpdater {
 	private int readBefore (int botId, int itemId) {
 		
 		String beforePath = System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountBefore" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		int result = 0;
@@ -482,11 +482,11 @@ public class DBUpdater {
 	//if so, this method will create them
 	private void invCountExists (int botId, int itemId) throws IOException {
 		String afterPathString = System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountAfter" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		String beforePathString =  System.getProperty("user.dir") + File.separator + 
-				"tempdata" + File.separator + "invCountBefore" + "_" + botId + "_"
+				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
 		File afterFile = new File (afterPathString);
