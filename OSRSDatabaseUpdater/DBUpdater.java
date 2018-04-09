@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -37,7 +36,7 @@ public class DBUpdater {
 		
 		int [][] reportKeys = getReportKeys();
 		int [] totalItemsCollected = getTotalNumOfItems();
-		
+		int [] levelData = new int [3];
 		String [] botNames = getBotNames();
 		String [] itemNames = getItemNames();
 		String botName, itemName;
@@ -65,6 +64,8 @@ public class DBUpdater {
 			totalNumOfItems = totalItemsCollected[i];
 			gpRate = updateGPRate(numOfItems, botId, itemId);
 			xpRate = updateXPRate(numOfItems, botId, itemId);
+			
+			updateLevelData(xpRate, botId, itemId);
 			
 			System.out.println(	"||\t" + botId + "\t|" + 
 								"|\t" + itemId + "\t|" + 
@@ -111,6 +112,26 @@ public class DBUpdater {
 			pwBefore = new PrintWriter (fwBefore);
 			pwBefore.println(Integer.toString(invCount));
 			pwBefore.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//Writes to file the currentLevel of botSkill and the xpNextLevel
+	public void writeLevelData (int currentLevel, int currentXp, int xpNextLevel, int botId, int itemId) {
+		String path = System.getProperty("user.dir") + File.separator + 
+				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
+				+ itemId + ".txt";
+		
+		try {
+			fwAfter = new FileWriter (path);
+			pwAfter = new PrintWriter (fwAfter);
+			pwAfter.println(Integer.toString(currentLevel));
+			pwAfter.println(Integer.toString(currentXp));
+			pwAfter.println(Integer.toString(xpNextLevel));
+			pwAfter.close();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -172,7 +193,36 @@ public class DBUpdater {
 
 		return result;
 	}
+	
+	//Returns the xp data set consisting of the current level of botSkill and xp till next level
+	private int [] readLevelData(int botId, int itemId) {
+		int [] levelData = new int [3];
+		String path = System.getProperty("user.dir") + File.separator + 
+				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
+				+ itemId + ".txt";
 		
+		String buff;
+		int i=0;
+		
+		try {
+			frBefore = new FileReader (path);
+			brBefore = new BufferedReader (frBefore);
+			
+			while((buff = brBefore.readLine()) != null) {
+				levelData[i]= Integer.parseInt(buff);
+				i++;
+			}
+			
+			brBefore.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return levelData;
+	}
+			
 	//Updates the numOfItems collected by the bot given the botId and the itemId of the item they are collecting
 	public int updateNumOfItems(int botId, int itemId) throws Exception {
 		
@@ -353,6 +403,47 @@ public class DBUpdater {
 		return xpRate;
 	}
 	
+	//Updates the current level, xpNextLevel and timeNextLevel for corresponding botId and itemId 
+	private int [] updateLevelData(int xpRate, int botId, int itemId) throws Exception {
+		
+		int [] levelData = readLevelData(botId, itemId);
+		int curLvl = levelData[0];
+		int totalXp = levelData[1];
+		int xpNextLvl = levelData[2];
+		float timeNextLevel = (float) xpNextLvl / xpRate;
+		
+		String updateQuery = "UPDATE Report "
+							+ "SET CurrentLevel = ?, TotalXp = ?, XpNextLevel  = ?, TimeNextLevel = ? "
+							+ "WHERE BotID = ? AND ItemID = ?";
+		
+		Connection conn = null;
+		PreparedStatement prepState = null;	
+		conn = getConnection();
+		
+		prepState = conn.prepareStatement(updateQuery);
+		prepState.setInt(1, curLvl);
+		prepState.setInt(2, totalXp);
+		prepState.setInt(3, xpNextLvl);
+		prepState.setString(4, floatToTime(timeNextLevel));
+		prepState.setInt(5, botId);
+		prepState.setInt(6, itemId);
+		prepState.executeUpdate();
+		
+		return levelData;
+	}
+	
+	private String floatToTime(float x) {
+		String result;
+		int days, hours, minutes, seconds;
+		double decimal = x - Math.floor(x);
+		days = (int) (x/24);
+		hours = (int) (Math.floor(x) % 24);
+		minutes = (int) Math.floor(decimal * 60);
+		seconds = (int) Math.floor((decimal * 60 - Math.floor(decimal * 60)) * 60);
+		
+		return days + "d, " + hours + "h, " + minutes + "m, " + seconds + "s";
+	}
+	
 	//Returns names of bot, given the corresponding botIDs in the parameter array
 	public String[] getBotNames() throws Exception {
 		
@@ -507,6 +598,21 @@ public class DBUpdater {
 		
 	}
 	
+	//same as invCountExists, but we check if necessary levelCount
+	private void levelCountExists (int botId, int itemId) throws IOException {
+		String pathString = System.getProperty("user.dir") + File.separator + 
+				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
+				+ itemId + ".txt";
+			
+		File file = new File (pathString);
+	
+		if (!file.isFile()){
+			System.out.println("Missing levelCount textfile for bot: " + botId + ", collecting item: " + itemId);
+			System.out.println("Now creating that file...\n");
+			file.createNewFile();
+		}		
+	}
+	
 	//Creates all necessary files not already created
 	//Calls on invCountExists for all existing botId and itemId in database
 	public void preProc() throws Exception {
@@ -518,6 +624,7 @@ public class DBUpdater {
 		
 		for (int i=0; i<getNumOfReportKeys(); i++){
 			invCountExists(reportKeys[i][0], reportKeys[i][1]);
+			levelCountExists(reportKeys[i][0], reportKeys[i][1]);
 		}
 		
 		System.out.println("All necessary files exists! Now starting application...");
