@@ -30,6 +30,10 @@ CREATE TABLE REPORT (
   NumOfItems int,
   XpPerHour float,
   GpPerHour float,
+  CurrentLevel int,
+  TotalXp int,
+  XpNextLevel int,
+  TimeNextLevel varchar(255),
   PRIMARY KEY (BotID, ItemID)
 );
 
@@ -40,3 +44,4 @@ ALTER TABLE BOT
 ALTER TABLE ITEM
   ADD CONSTRAINT FK_ITEMSKILL
   FOREIGN KEY (SkillID) REFERENCES SKILL (SkillID);
+  
