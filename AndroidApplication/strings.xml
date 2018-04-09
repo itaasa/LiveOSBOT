@@ -5,7 +5,13 @@
     <string name="CollectingLabel">Collecting</string>
     <string name="TotalCollectedLabel">Total Collected</string>
     <string name="XpPerHourLabel">Xp Per Hour</string>
-    <string name="GpPerHourLabel">Gp Per Hour</string>
+    <string name="GpPerHourLabel">/Hour</string>
+    <string name="CurrentLevelLabel">Current Level</string>
+    <string name="TotalXpLabel">Total Xp</string>
+    <string name="XpToLevelUpLabel">Xp To Level Up</string>
+    <string name="TimeToLevelLabel">Est. Level Up</string>
+
+
 
     <string name="DefaultUsername">Player Name</string>
     <string name="DefaultStatus">Offline</string>
@@ -16,5 +22,7 @@
     <string name="WorldHeader">World </string>
     <string name="DefaultWorld">001</string>
     <string name="ImageDescription">Status</string>
+
+    <string name="UpdateButton">Update Data</string>
 
     </resources>

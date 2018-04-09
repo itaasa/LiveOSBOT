@@ -21,7 +21,7 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
     private BotReportData brd;
     private HashMap postData = new HashMap();
     private TextView tViewBotName, tViewStatus, tViewActive, tViewSkillName, tViewItemName, tViewCollect,
-            tViewXpPerHour, tViewGpPerHour;
+            tViewXpPerHour, tViewGpPerHour, tViewCurrentLvl, tViewTotalXp, tViewXpNextLevel, tViewTimeNextLevel;
     private Button refreshButton;
 
     @Override
@@ -38,7 +38,15 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
         tViewCollect = findViewById(R.id.TotalCollectedTextView);
         tViewXpPerHour = findViewById(R.id.XpPerHourTextView);
         tViewGpPerHour = findViewById(R.id.GpPerHourTextView);
+
+        tViewCurrentLvl = findViewById(R.id.CurrentLevelTextView);
+        tViewTotalXp = findViewById(R.id.TotalXpTextView);
+        tViewXpNextLevel = findViewById(R.id.XpNextLevelTextView);
+        tViewTimeNextLevel = findViewById(R.id.TimeNextLevelTextView);
+
+
         refreshButton = findViewById(R.id.refreshButton);
+
 
         refreshButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -62,7 +70,7 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
             postData.put("inputItemID", itemId);
 
             PostResponseAsyncTask readTask = new PostResponseAsyncTask(BotReportActivity.this, postData, BotReportActivity.this);
-            readTask.execute("http://IPV4ADDRESS/liveosbot/botreportdata.php");
+            readTask.execute("http://192.168.56.1/liveosbot/botreportdata.php");
         }
 
         else {
@@ -82,8 +90,10 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
 
         if (brd.isOnline())
             tViewStatus.setText(String.valueOf(getString(R.string.BotIsOnline)));
-        else
+        else {
             tViewStatus.setText(String.valueOf(getString(R.string.DefaultStatus)));
+            tViewStatus.setTextColor(getResources().getColor(R.color.colorOfflineText));
+        }
 
         if (brd.isActive())
             tViewActive.setText(String.valueOf(getString(R.string.BotIsActive)));
@@ -95,6 +105,11 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
         tViewCollect.setText(String.valueOf(brd.getNumOfItems()));
         tViewXpPerHour.setText(String.valueOf(brd.getXpPerHour()));
         tViewGpPerHour.setText(String.valueOf(brd.getGpPerHour()));
+        tViewCurrentLvl.setText(String.valueOf(brd.getCurrentLvl()));
+        tViewTotalXp.setText(String.valueOf(brd.getTotalXp()));
+        tViewXpNextLevel.setText(String.valueOf(brd.getXpNextLevel()));
+        tViewTimeNextLevel.setText(brd.getTimeNextLevel());
+
 
     }
 }

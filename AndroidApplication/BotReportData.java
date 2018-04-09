@@ -34,6 +34,19 @@ public class BotReportData {
     @SerializedName("GpPerHour")
     private float gpPerHour;
 
+    @SerializedName("CurrentLevel")
+    private int currentLvl;
+
+    @SerializedName("TotalXp")
+    private int totalXp;
+
+    @SerializedName("XpNextLevel")
+    private int xpNextLevel;
+
+    @SerializedName("TimeNextLevel")
+    private String timeNextLevel;
+
+
 
     //Getter functions
     int getBotID(){
@@ -61,9 +74,15 @@ public class BotReportData {
         return this.itemName;
     }
 
-    int getItemID(){
-        return itemID;
-    }
+    int getCurrentLvl() {return currentLvl;}
+
+    int getTotalXp() {return totalXp;}
+
+    int getXpNextLevel() {return xpNextLevel;}
+
+    String getTimeNextLevel() { return timeNextLevel;}
+
+    int getItemID(){ return itemID; }
 
     int getNumOfItems(){
         return numOfItems;

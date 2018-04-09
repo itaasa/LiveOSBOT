@@ -6,4 +6,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBotLobbyText">#DCD9D8 </color>
     <color name="colorOnlineText">#52FF00</color>
+    <color name="colorOfflineText">#FF0000</color>
 </resources>
