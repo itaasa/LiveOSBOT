@@ -9,11 +9,12 @@
       $itemID = $_POST['inputItemID'];
 
       $query = "SELECT REPORT.*, BOT.BotName, BOT.IsActive, BOT.IsOnline, ITEM.ItemName, SKILL.SkillName
-                    FROM REPORT
-                    INNER JOIN BOT ON REPORT.BotID = BOT.BotID
-                    INNER JOIN ITEM ON REPORT.ItemID = ITEM.ItemID
-                    INNER JOIN SKILL ON ITEM.SkillID = SKILL.SkillID
-                    WHERE REPORT.BotID = '$botID' AND REPORT.ItemID = '$itemID'";
+                    FROM REPORT, BOT, SKILL, ITEM
+                    WHERE REPORT.BotID = '$botID'
+                    AND REPORT.ItemID = '$itemID'
+                    AND BOT.BotID = '$botID'
+                    AND ITEM.ItemID = '$itemID'
+                    AND SKILL.SkillID = ITEM.SkillID";
 
       $result  = mysqli_query ($conn, $query);
 
