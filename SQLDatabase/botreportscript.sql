@@ -1,7 +1,6 @@
 CREATE TABLE BOT (
   BotID int NOT NULL,
   BotName varchar(12),
-  IsActive boolean,
   IsOnline boolean,
   SkillID int,
   World char(3),
