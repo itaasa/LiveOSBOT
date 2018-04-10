@@ -8,7 +8,7 @@
       $botID = $_POST['inputBotID'];
       $itemID = $_POST['inputItemID'];
 
-      $query = "SELECT REPORT.*, BOT.BotName, BOT.IsActive, BOT.IsOnline, ITEM.ItemName, SKILL.SkillName
+      $query = "SELECT REPORT.*, BOT.BotName, BOT.IsOnline, ITEM.ItemName, SKILL.SkillName
                     FROM REPORT, BOT, SKILL, ITEM
                     WHERE REPORT.BotID = '$botID'
                     AND REPORT.ItemID = '$itemID'
