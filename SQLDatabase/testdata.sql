@@ -39,7 +39,7 @@ INSERT INTO BOT (BotID, BotName, IsOnline, SkillID, World)
   (15, 'Nick Veggie', 1, 14, 098);
 
 
-INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour, CurrentLevel, TotalXp, XpNextLevel, TimeNextLevel
+INSERT INTO REPORT (BotID, ItemID, NumOfItems, XpPerHour, GpPerHour, CurrentLevel, TotalXp, XpNextLevel, TimeNextLevel)
   VALUES
   (0, 377, 0, 0, 0, 0, 0, 0, ''),
   (1, 1515, 0, 0, 0, 0, 0, 0, ''),
