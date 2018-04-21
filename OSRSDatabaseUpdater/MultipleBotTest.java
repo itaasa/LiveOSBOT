@@ -23,7 +23,7 @@ public class MultipleBotTest {
 				int randomNumColl = r.nextInt(3);
 				db.writeAfter(randomNumColl, botId, itemId);
 				db.writeLevelData(13, 10000 + (count*10), 200000, botId, itemId);
-				//System.out.println("HELLO");
+				db.writeStatus(botId, r.nextInt(1));
 			}
 			count++;
 			Thread.sleep(5000);

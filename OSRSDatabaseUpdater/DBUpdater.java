@@ -43,15 +43,15 @@ public class DBUpdater {
 		
 		int totalNumOfItems, numOfItems, gpRate, xpRate, numOfKeys = getNumOfReportKeys(), 
 				botId, itemId;
-		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println("||--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 		System.out.println("||\tBot ID\t||"
 							+ "\tItem ID\t||"
 							+ "\t" + String.format("%-20s", "BotName") + "||"
 							+ "\t" + String.format("%-20s", "ItemName") + "||"
-							+ "\t\tCount\t\t||"
+							+ "\t\t" + String.format("%-20s", "Count") + "\t\t||"
 							+ "\tGP/Hour\t||"
 							+ "\tXP/Hour\t||");
-		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println("||--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 
 		for (int i=0; i<numOfKeys; i++) {
 			
@@ -66,17 +66,18 @@ public class DBUpdater {
 			xpRate = updateXPRate(numOfItems, botId, itemId);
 			
 			updateLevelData(xpRate, botId, itemId);
+			updateStatus(botId);
 			
 			System.out.println(	"||\t" + botId + "\t|" + 
 								"|\t" + itemId + "\t|" + 
 								"|\t" + String.format("%-20s", botName) + "|" +
 								"|\t" + String.format("%-20s", itemName) + "|" +
-								"|\t\t" + totalNumOfItems + " (+" + numOfItems + ")" + "\t\t|" + 
+								"|\t\t" + String.format("%-20s",totalNumOfItems + " (+" + numOfItems + ")") + "\t\t|" + 
 								"|\t" + gpRate + "\t|" +
 								"|\t" + xpRate + "\t||");			
 		}
 		
-		System.out.println("||----------------------------------------------------------------------------------------------------------------------------------------------||");
+		System.out.println("||--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 		Thread.sleep(7000);
 	}
 	
@@ -111,6 +112,23 @@ public class DBUpdater {
 			fwBefore = new FileWriter (beforePath);
 			pwBefore = new PrintWriter (fwBefore);
 			pwBefore.println(Integer.toString(invCount));
+			pwBefore.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//Write online status to "onlineStatus_botId.txt" for bot with id=botId
+	public void writeStatus (int botId, int status) {
+		
+		String beforePath = System.getProperty("user.dir") + File.separator + 
+				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
+		
+		try {
+			fwBefore = new FileWriter (beforePath);
+			pwBefore = new PrintWriter (fwBefore);
+			pwBefore.println(Integer.toString(status));
 			pwBefore.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -221,6 +239,33 @@ public class DBUpdater {
 		}
 		
 		return levelData;
+	}
+	
+	//Returns the status of the bot with id = botId
+	private int readStatus(int botId) {
+		String path = System.getProperty("user.dir") + File.separator + 
+				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
+		
+
+		int result = 0;
+		String buff;
+		
+		try {
+			frBefore = new FileReader (path);
+			brBefore = new BufferedReader (frBefore);
+			
+			while((buff = brBefore.readLine()) != null) {
+				result = Integer.parseInt(buff);
+			}
+			
+			brBefore.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 			
 	//Updates the numOfItems collected by the bot given the botId and the itemId of the item they are collecting
@@ -432,8 +477,24 @@ public class DBUpdater {
 		return levelData;
 	}
 	
+	private void updateStatus (int botId) throws Exception{
+		
+		int status = readStatus(botId);
+		
+		String updateQuery = "UPDATE Bot "
+							+ "SET IsOnline = ? "
+							+ "WHERE BotID = ?";
+		
+		Connection conn = null;
+		PreparedStatement prepState = null;	
+		conn = getConnection();
+		prepState = conn.prepareStatement(updateQuery);
+		prepState.setInt(1, status);
+		prepState.setInt(2, botId);
+		prepState.executeUpdate();
+	}
+	
 	private String floatToTime(float x) {
-		String result;
 		int days, hours, minutes, seconds;
 		double decimal = x - Math.floor(x);
 		days = (int) (x/24);
@@ -598,7 +659,7 @@ public class DBUpdater {
 		
 	}
 	
-	//same as invCountExists, but we check if necessary levelCount
+	//same as invCountExists, but we check if necessary levelCount text files have been made
 	private void levelCountExists (int botId, int itemId) throws IOException {
 		String pathString = System.getProperty("user.dir") + File.separator + 
 				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
@@ -613,6 +674,21 @@ public class DBUpdater {
 		}		
 	}
 	
+	//same as invCountExists, but we check if necessary onlineStatus text files have been made
+	private void statusExists (int botId) throws IOException {
+		String pathString = System.getProperty("user.dir") + File.separator + 
+				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
+		
+		File file = new File (pathString);
+		
+		if (!file.isFile()) {
+			System.out.println("Missing onlineStatus textfile for bot: " + botId);
+			System.out.println("Now creating that file...\n");
+			file.createNewFile();
+		}
+	}
+	
+	
 	//Creates all necessary files not already created
 	//Calls on invCountExists for all existing botId and itemId in database
 	public void preProc() throws Exception {
@@ -625,6 +701,7 @@ public class DBUpdater {
 		for (int i=0; i<getNumOfReportKeys(); i++){
 			invCountExists(reportKeys[i][0], reportKeys[i][1]);
 			levelCountExists(reportKeys[i][0], reportKeys[i][1]);
+			statusExists(reportKeys[i][0]);
 		}
 		
 		System.out.println("All necessary files exists! Now starting application...");
