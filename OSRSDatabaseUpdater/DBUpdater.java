@@ -4,31 +4,27 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 
 public class DBUpdater {
 	
+	//
+	private BotReader botRead;
+	private BotWriter botWrite;
+	
 	//Information needed to connect to database
 	private String driver, url, user, pass;
 	
-	//For reading and writing live updating inventory counts
-	private FileReader frBefore, frAfter;
-	private BufferedReader brBefore, brAfter;
-	private FileWriter fwBefore, fwAfter;
-	private PrintWriter pwBefore, pwAfter;
-
 	//Constructor class
 	public DBUpdater(String driver, String url, String user, String pass) {
 		this.driver = driver;
 		this.url = url;
 		this.user = user;
-		this.pass = pass;	
+		this.pass = pass;
+		this.botRead = new BotReader();
+		this.botWrite = new BotWriter();
 	}
 	
 	//Updates the database with all the values passed by ALL bots running
@@ -36,7 +32,6 @@ public class DBUpdater {
 		
 		int [][] reportKeys = getReportKeys();
 		int [] totalItemsCollected = getTotalNumOfItems();
-		int [] levelData = new int [3];
 		String [] botNames = getBotNames();
 		String [] itemNames = getItemNames();
 		String botName, itemName;
@@ -81,193 +76,6 @@ public class DBUpdater {
 		Thread.sleep(7000);
 	}
 	
-	//Writes to "invCountAfter_botId_itemId.txt" the current inventory count of the bot with id=botId 
-	//and collecting item with id=itemId when called
-	public void writeAfter (int invCount, int botId, int itemId) {
-		
-		String afterPath = System.getProperty("user.dir") + File.separator + 
-				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		try {
-			fwAfter = new FileWriter (afterPath);
-			pwAfter = new PrintWriter (fwAfter);
-			pwAfter.println(Integer.toString(invCount));
-			pwAfter.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	//Writes to "invCountBefore_botId_itemId.txt" the current inventory count of the bot with id=botId 
-	//and collecting item with id=itemId when called
-	public void writeBefore (int invCount, int botId, int itemId) {
-		
-		String beforePath = System.getProperty("user.dir") + File.separator + 
-				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		try {
-			fwBefore = new FileWriter (beforePath);
-			pwBefore = new PrintWriter (fwBefore);
-			pwBefore.println(Integer.toString(invCount));
-			pwBefore.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	//Write online status to "onlineStatus_botId.txt" for bot with id=botId
-	public void writeStatus (int botId, int status) {
-		
-		String beforePath = System.getProperty("user.dir") + File.separator + 
-				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
-		
-		try {
-			fwBefore = new FileWriter (beforePath);
-			pwBefore = new PrintWriter (fwBefore);
-			pwBefore.println(Integer.toString(status));
-			pwBefore.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	//Writes to file the currentLevel of botSkill and the xpNextLevel
-	public void writeLevelData (int currentLevel, int currentXp, int xpNextLevel, int botId, int itemId) {
-		String path = System.getProperty("user.dir") + File.separator + 
-				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		try {
-			fwAfter = new FileWriter (path);
-			pwAfter = new PrintWriter (fwAfter);
-			pwAfter.println(Integer.toString(currentLevel));
-			pwAfter.println(Integer.toString(currentXp));
-			pwAfter.println(Integer.toString(xpNextLevel));
-			pwAfter.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	//Reads the inventory count written in invCountAfter_botId_itemId.txt
-	private int readAfter (int botId, int itemId) {
-		
-		String afterPath = System.getProperty("user.dir") + File.separator + 
-				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		int result = 0;
-		String buff;
-		
-		try {
-			frAfter = new FileReader (afterPath);
-			brAfter = new BufferedReader (frAfter);
-			
-			while((buff = brAfter.readLine()) != null) {
-				result = Integer.parseInt(buff);
-			}
-			
-			brAfter.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-	
-	//Reads the inventory count written in invCountBefore_botId_itemId.txt
-	private int readBefore (int botId, int itemId) {
-		
-		String beforePath = System.getProperty("user.dir") + File.separator + 
-				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		int result = 0;
-		String buff;
-		
-		try {
-			frBefore = new FileReader (beforePath);
-			brBefore = new BufferedReader (frBefore);
-			
-			while((buff = brBefore.readLine()) != null) {
-				result = Integer.parseInt(buff);
-			}
-			
-			brBefore.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-	
-	//Returns the xp data set consisting of the current level of botSkill and xp till next level
-	private int [] readLevelData(int botId, int itemId) {
-		int [] levelData = new int [3];
-		String path = System.getProperty("user.dir") + File.separator + 
-				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
-				+ itemId + ".txt";
-		
-		String buff;
-		int i=0;
-		
-		try {
-			frBefore = new FileReader (path);
-			brBefore = new BufferedReader (frBefore);
-			
-			while((buff = brBefore.readLine()) != null) {
-				levelData[i]= Integer.parseInt(buff);
-				i++;
-			}
-			
-			brBefore.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return levelData;
-	}
-	
-	//Returns the status of the bot with id = botId
-	private int readStatus(int botId) {
-		String path = System.getProperty("user.dir") + File.separator + 
-				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
-		
-
-		int result = 0;
-		String buff;
-		
-		try {
-			frBefore = new FileReader (path);
-			brBefore = new BufferedReader (frBefore);
-			
-			while((buff = brBefore.readLine()) != null) {
-				result = Integer.parseInt(buff);
-			}
-			
-			brBefore.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-			
 	//Updates the numOfItems collected by the bot given the botId and the itemId of the item they are collecting
 	public int updateNumOfItems(int botId, int itemId) throws Exception {
 		
@@ -277,8 +85,8 @@ public class DBUpdater {
 		int numOfItems = 0;
 		int numCollected;
 		
-		int beforeValue = readBefore(botId, itemId);
-		int afterValue = readAfter(botId, itemId);
+		int beforeValue = botRead.readBefore(botId, itemId);
+		int afterValue = botRead.readAfter(botId, itemId);
 		
 		if (afterValue >= beforeValue)
 			numCollected = afterValue - beforeValue;
@@ -322,7 +130,7 @@ public class DBUpdater {
 		
 		
 		//Resetting before value to after value
-		writeBefore(afterValue, botId, itemId);
+		botWrite.writeBefore(afterValue, botId, itemId);
 
 		return numCollected;
 							
@@ -451,7 +259,7 @@ public class DBUpdater {
 	//Updates the current level, xpNextLevel and timeNextLevel for corresponding botId and itemId 
 	private int [] updateLevelData(int xpRate, int botId, int itemId) throws Exception {
 		
-		int [] levelData = readLevelData(botId, itemId);
+		int [] levelData = botRead.readLevelData(botId, itemId);
 		int curLvl = levelData[0];
 		int totalXp = levelData[1];
 		int xpNextLvl = levelData[2];
@@ -479,7 +287,7 @@ public class DBUpdater {
 	
 	private void updateStatus (int botId) throws Exception{
 		
-		int status = readStatus(botId);
+		int status = botRead.readStatus(botId);
 		
 		String updateQuery = "UPDATE Bot "
 							+ "SET IsOnline = ? "

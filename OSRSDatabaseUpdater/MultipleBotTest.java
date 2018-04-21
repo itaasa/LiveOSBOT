@@ -10,6 +10,7 @@ public class MultipleBotTest {
 		String inUser = "root";
 		String inPass = "";
 		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass);
+		BotWriter botWrite = new BotWriter();
 		Random r =  new Random();
 		
 		int[][] keyArray = db.getReportKeys();
@@ -21,9 +22,9 @@ public class MultipleBotTest {
 			for (int i=0; i<numOfKeys; i++) {
 				int botId = keyArray[i][0], itemId = keyArray[i][1];
 				int randomNumColl = r.nextInt(3);
-				db.writeAfter(randomNumColl, botId, itemId);
-				db.writeLevelData(13, 10000 + (count*10), 200000, botId, itemId);
-				db.writeStatus(botId, r.nextInt(1));
+				botWrite.writeAfter(randomNumColl, botId, itemId);
+				botWrite.writeLevelData(13, 10000 + (count*10), 200000, botId, itemId);
+				botWrite.writeStatus(botId, r.nextInt(1));
 			}
 			count++;
 			Thread.sleep(5000);
