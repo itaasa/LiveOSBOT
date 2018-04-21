@@ -12,6 +12,7 @@ import com.kosalgeek.android.json.JsonConverter;
 import com.kosalgeek.genasync12.AsyncResponse;
 import com.kosalgeek.genasync12.PostResponseAsyncTask;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
     private ArrayList<BotReportData> botDataList;
     private BotReportData brd;
     private HashMap postData = new HashMap();
-    private TextView tViewBotName, tViewStatus, tViewActive, tViewSkillName, tViewItemName, tViewCollect,
+    private TextView tViewBotName, tViewStatus, tViewSkillName, tViewItemName, tViewCollect,
             tViewXpPerHour, tViewGpPerHour, tViewCurrentLvl, tViewTotalXp, tViewXpNextLevel, tViewTimeNextLevel;
     private Button refreshButton;
 
@@ -32,7 +33,6 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
         //PUT BIG BLOCKS INTO FUNCTIONS
         tViewBotName = findViewById(R.id.botNameTextView);
         tViewStatus = findViewById(R.id.StatusTextView);
-        tViewActive = findViewById(R.id.IsActiveTextView);
         tViewSkillName = findViewById(R.id.SkillTextView);
         tViewItemName = findViewById(R.id.CollectingTextView);
         tViewCollect = findViewById(R.id.TotalCollectedTextView);
@@ -94,22 +94,37 @@ public class BotReportActivity extends AppCompatActivity implements AsyncRespons
             tViewStatus.setText(String.valueOf(getString(R.string.DefaultStatus)));
             tViewStatus.setTextColor(getResources().getColor(R.color.colorOfflineText));
         }
-
+/*
         if (brd.isActive())
             tViewActive.setText(String.valueOf(getString(R.string.BotIsActive)));
         else
             tViewActive.setText(String.valueOf(getString(R.string.BotIsNotActive)));
-
+*/
         tViewSkillName.setText(String.valueOf(brd.getSkillName()));
         tViewItemName.setText(String.valueOf(brd.getItemName()));
-        tViewCollect.setText(String.valueOf(brd.getNumOfItems()));
-        tViewXpPerHour.setText(String.valueOf(brd.getXpPerHour()));
-        tViewGpPerHour.setText(String.valueOf(brd.getGpPerHour()));
+        tViewCollect.setText(numberToString(brd.getNumOfItems()));
+        tViewXpPerHour.setText(numberToString(brd.getXpPerHour()));
+        tViewGpPerHour.setText(numberToString(brd.getGpPerHour()));
         tViewCurrentLvl.setText(String.valueOf(brd.getCurrentLvl()));
-        tViewTotalXp.setText(String.valueOf(brd.getTotalXp()));
-        tViewXpNextLevel.setText(String.valueOf(brd.getXpNextLevel()));
+        tViewTotalXp.setText(numberToString(brd.getTotalXp()));
+        tViewXpNextLevel.setText(numberToString(brd.getXpNextLevel()));
         tViewTimeNextLevel.setText(brd.getTimeNextLevel());
 
 
     }
+
+    public String numberToString (int x) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(x);
+    }
+
+    public String numberToString (float x) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(x);
+    }
+
 }
+
+
+
+

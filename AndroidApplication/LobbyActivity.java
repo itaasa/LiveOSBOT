@@ -6,11 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.amigold.fundapter.BindDictionary;
 import com.amigold.fundapter.FunDapter;
 import com.amigold.fundapter.extractors.StringExtractor;
+import com.amigold.fundapter.interfaces.DynamicImageLoader;
+import com.amigold.fundapter.interfaces.StaticImageLoader;
 import com.kosalgeek.android.json.JsonConverter;
 import com.kosalgeek.genasync12.AsyncResponse;
 import com.kosalgeek.genasync12.PostResponseAsyncTask;
@@ -48,6 +51,22 @@ public class LobbyActivity  extends AppCompatActivity implements AsyncResponse {
             @Override
             public String getStringValue(BotLobbyData blData, int position) {
                 return blData.botWorld;
+            }
+        });
+
+        dict.addDynamicImageField(R.id.statusImage, new StringExtractor<BotLobbyData>() {
+            @Override
+            public String getStringValue(BotLobbyData blData, int position) {
+                System.out.println("BotID: " + blData.botName + " " + blData.getBotStatus());
+                return blData.getBotStatus();
+            }
+        }, new DynamicImageLoader() {
+            @Override
+            public void loadImage(String url, ImageView view) {
+                if (url.compareTo("1") == 0)
+                    view.setImageResource(R.drawable.ic_online_status);
+                else
+                    view.setImageResource(R.drawable.ic_offline_status);
             }
         });
 

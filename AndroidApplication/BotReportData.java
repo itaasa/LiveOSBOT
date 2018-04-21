@@ -13,9 +13,6 @@ public class BotReportData {
     @SerializedName("IsOnline")
     private int isOnline;
 
-    @SerializedName("IsActive")
-    private int isActive;
-
     @SerializedName("SkillName")
     private String skillName;
 
@@ -60,11 +57,6 @@ public class BotReportData {
     boolean isOnline(){
         return this.isOnline == 1;
     }
-
-    boolean isActive(){
-        return this.isActive == 1;
-    }
-
 
     String getSkillName(){
         return this.skillName;

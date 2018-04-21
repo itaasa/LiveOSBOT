@@ -16,6 +16,9 @@ public class BotLobbyData {
     @SerializedName("World")
     public String botWorld;
 
+    @SerializedName("IsOnline")
+    public int botStatus;
+
     public String getBotId () { return botId; }
 
     public String getItemId() { return itemId; }
@@ -27,6 +30,8 @@ public class BotLobbyData {
     public String getBotWorld() {
         return botWorld;
     }
+
+    public String getBotStatus() { return Integer.toString(botStatus);}
 
     public void setBotName(String botName) {
         this.botName = botName;
