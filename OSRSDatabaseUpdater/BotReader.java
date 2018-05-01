@@ -1,5 +1,4 @@
 package scripts;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,18 +7,24 @@ import java.io.IOException;
 public class BotReader {
 	
 	//File access objects
-	FileReader fRead;
-	BufferedReader bRead;
+	private FileReader fRead;
+	private BufferedReader bRead;
 	
+	//Path to count, status and level data files
+	private String botDataPath;
 	
 	public BotReader () {
-		
+		botDataPath =  System.getProperty("user.dir");
+	}
+	
+	public BotReader (String inputPath) {
+		botDataPath = inputPath;
 	}
 	
 	//Reads the inventory count written in invCountAfter_botId_itemId.txt
 	public int readAfter (int botId, int itemId) {
 		
-		String invAfterPath = System.getProperty("user.dir") + File.separator + 
+		String invAfterPath = botDataPath + File.separator + 
 				"itemdata" + File.separator + "invCountAfter" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
@@ -49,7 +54,7 @@ public class BotReader {
 	//Reads the inventory count written in invCountBefore_botId_itemId.txt
 	public int readBefore (int botId, int itemId) {
 		
-		String beforePath = System.getProperty("user.dir") + File.separator + 
+		String beforePath = botDataPath + File.separator + 
 				"itemdata" + File.separator + "invCountBefore" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
@@ -77,7 +82,7 @@ public class BotReader {
 	//Returns the xp data set consisting of the current level of botSkill and xp till next level
 	public int [] readLevelData(int botId, int itemId) {
 		int [] levelData = new int [3];
-		String path = System.getProperty("user.dir") + File.separator + 
+		String path = botDataPath + File.separator + 
 				"leveldata" + File.separator + "levelCount" + "_" + botId + "_"
 				+ itemId + ".txt";
 		
@@ -105,7 +110,7 @@ public class BotReader {
 	
 	//Returns the status of the bot with id = botId
 	public int readStatus(int botId) {
-		String path = System.getProperty("user.dir") + File.separator + 
+		String path = botDataPath + File.separator + 
 				"statusdata" + File.separator + "onlineStatus" + "_" + botId + ".txt";
 		
 

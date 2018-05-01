@@ -1,16 +1,20 @@
 package scripts;
-
 import java.util.Random;
 
 public class MultipleBotTest {
+	
+	//Simply simulates bots updating data to the text files by implementing random numbers
 	public static void main(String args[]) throws Exception {
 		
+		//Necessary database connection information
 		String inDriver = "com.mysql.jdbc.Driver";
 		String inUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
 		String inUser = "root";
 		String inPass = "";
 		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass);
 		BotWriter botWrite = new BotWriter();
+		
+		//Used to generate random inventory counts, used to simulate bots collecting items
 		Random r =  new Random();
 		
 		int[][] keyArray = db.getReportKeys();

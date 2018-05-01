@@ -1,5 +1,4 @@
 package scripts;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,7 +9,7 @@ import java.io.IOException;
 
 public class DBUpdater {
 	
-	//
+	//Objects to obtain live bot information
 	private BotReader botRead;
 	private BotWriter botWrite;
 	
@@ -27,7 +26,7 @@ public class DBUpdater {
 		this.botWrite = new BotWriter();
 	}
 	
-	//Updates the database with all the values passed by ALL bots running
+	//Updates the database with all the values passed by ALL bots currently running (this uses all methods)
 	public void executeProc() throws Exception{
 		
 		int [][] reportKeys = getReportKeys();
@@ -38,6 +37,7 @@ public class DBUpdater {
 		
 		int totalNumOfItems, numOfItems, gpRate, xpRate, numOfKeys = getNumOfReportKeys(), 
 				botId, itemId;
+		
 		System.out.println("||--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 		System.out.println("||\tBot ID\t||"
 							+ "\tItem ID\t||"
@@ -277,7 +277,7 @@ public class DBUpdater {
 		prepState.setInt(1, curLvl);
 		prepState.setInt(2, totalXp);
 		prepState.setInt(3, xpNextLvl);
-		prepState.setString(4, floatToTime(timeNextLevel));
+		prepState.setString(4, floatToTimeString(timeNextLevel));
 		prepState.setInt(5, botId);
 		prepState.setInt(6, itemId);
 		prepState.executeUpdate();
@@ -302,7 +302,8 @@ public class DBUpdater {
 		prepState.executeUpdate();
 	}
 	
-	private String floatToTime(float x) {
+	//Calculates number of seconds to numbers of day, hours, minutes and seconds and displays it in a string
+	private String floatToTimeString(float x) {
 		int days, hours, minutes, seconds;
 		double decimal = x - Math.floor(x);
 		days = (int) (x/24);
@@ -392,7 +393,7 @@ public class DBUpdater {
 		
 	}
 	
-	//Returns the number of tuples in the relation REPORT. In otherwords the number of active bots
+	//Returns the number of tuples in the relation REPORT. In other words the number of active bots
 	public int getNumOfReportKeys () throws Exception {
 		int numOfKeys = 0;
 		Connection conn = null;
@@ -504,7 +505,7 @@ public class DBUpdater {
 		int [][] reportKeys = getReportKeys();
 		
 		System.out.println("Now checking if necessary files exist...");
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 		
 		for (int i=0; i<getNumOfReportKeys(); i++){
 			invCountExists(reportKeys[i][0], reportKeys[i][1]);
@@ -513,7 +514,7 @@ public class DBUpdater {
 		}
 		
 		System.out.println("All necessary files exists! Now starting application...");
-		Thread.sleep(3000);
+		Thread.sleep(1000);
 		System.out.println();
 		System.out.println();
 		

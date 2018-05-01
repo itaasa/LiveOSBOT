@@ -5,29 +5,42 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Test {
+public class BotDatabaseConnector {
+	
+	private static DBAuthenticator dbAuth;
+	private static DBUpdater dbUp;
+	
+	public static void main (String args[]) throws Exception{
 
-	//Uses DBUpdater to read updated data and then update the database accordingly
-	//Does this for all bots
-	public static void main(String args[]) throws Exception {
-
-		String inDriver = "com.mysql.jdbc.Driver";
-		String inUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
-		String inUser = "root";
-		String inPass = "";
-		DBUpdater db = new DBUpdater(inDriver, inUrl, inUser, inPass);
-		
 		displayHeaderText();
 		pressAnyKeyToContinue();
+
+		connectToDB ("jdbc:mysql://localhost:3306/liveosbotdb");
 		
-		//makes sure necessary files have been created
-		db.preProc();
+		dbUp.preProc();
 		
-		while (true){
-			db.executeProc();
+		while (true) {
+			dbUp.executeProc();
 		}
+		
 	}
 	
+	private static void connectToDB (String dbURL) {
+		
+		dbAuth = new DBAuthenticator (dbURL);
+		
+		System.out.println("Login to database...");
+		
+		do {
+			dbAuth.setUser();
+			dbAuth.setPass();
+			dbUp = dbAuth.authenticate();
+			
+			if (dbUp == null) {
+				System.out.println("Invalid login information.");
+			}
+		} while (dbUp == null);
+	}
 	
 	public static void displayHeaderText () {
 		FileReader fr;
@@ -54,8 +67,9 @@ public class Test {
 	}
 	
 	 public static void pressAnyKeyToContinue(){ 
-	        System.out.println("Press the enter to key to continue...");
+	        System.out.println("Press the enter to key to continue... ");
 	        try { System.in.read();}  
 	        catch(Exception e){}  
 	 }
+	
 }

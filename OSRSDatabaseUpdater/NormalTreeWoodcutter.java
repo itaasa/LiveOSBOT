@@ -2,6 +2,7 @@ package scripts;
 
 import org.tribot.api2007.Banking;
 import org.tribot.api2007.Inventory;
+import org.tribot.api2007.Login;
 import org.tribot.api2007.Objects;
 import org.tribot.api2007.Player;
 import org.tribot.api2007.WebWalking;
@@ -16,6 +17,7 @@ import org.tribot.script.ScriptManifest;
 public class NormalTreeWoodcutter extends Script {
 
 	BotWriter botWrite = new BotWriter();
+	
 	//The following are ID's of in-game object needed to be referenced in the script
 	private final int BRONZE_AXE_ID = 1351;
 	private final int NORMAL_TREE_ID [] = {1276, 1278};
@@ -38,8 +40,11 @@ public class NormalTreeWoodcutter extends Script {
 	public boolean onStart() {
 		
 		//Setting the inventory text files counts to the current inventory count of the bot
-		botWrite.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
-		botWrite.writeBefore(Inventory.getCount(LOG_ID), 0, 1511);
+		botWrite.writeAfter(Inventory.getCount(LOG_ID), 4, 1511);
+		botWrite.writeBefore(Inventory.getCount(LOG_ID), 4, 1511);
+		
+		//Checks if bot is online
+		println (Login.getLoginState());
 		return true;
 	}
 	
@@ -54,7 +59,7 @@ public class NormalTreeWoodcutter extends Script {
 	
 	private boolean loop ()
 	{
-		botWrite.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
+		botWrite.writeAfter(Inventory.getCount(LOG_ID), 4, 1511);
 		
 		//First we check if bot has a full inventory, if so we must deposit excess items to the nearest bank
 		if (Inventory.isFull()){
