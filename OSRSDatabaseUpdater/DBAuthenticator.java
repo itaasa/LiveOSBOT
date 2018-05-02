@@ -1,4 +1,4 @@
-package scripts;
+package dbbotconnector;
 
 import java.io.Console;
 import java.util.Scanner;

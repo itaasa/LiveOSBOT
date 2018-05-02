@@ -1,4 +1,4 @@
-package scripts;
+package dbbotconnector;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

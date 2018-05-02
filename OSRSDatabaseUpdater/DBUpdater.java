@@ -1,4 +1,5 @@
-package scripts;
+package dbbotconnector;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,14 +10,13 @@ import java.io.IOException;
 
 public class DBUpdater {
 	
-	//Objects to obtain live bot information
+	//Allows for class to read and write to bot data text files
 	private BotReader botRead;
 	private BotWriter botWrite;
 	
-	//Information needed to connect to database
+	//Database connection information
 	private String driver, url, user, pass;
 	
-	//Constructor class
 	public DBUpdater(String driver, String url, String user, String pass) {
 		this.driver = driver;
 		this.url = url;
