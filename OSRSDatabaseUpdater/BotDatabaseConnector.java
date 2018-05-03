@@ -9,20 +9,21 @@ public class BotDatabaseConnector {
 	
 	private static DBAuthenticator dbAuth;
 	private static DBUpdater dbUp;
+	private static DBFileChecker fCheck;
+	private static String dbUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
 	
 	public static void main (String args[]) throws Exception{
 
 		displayHeaderText();
 		pressAnyKeyToContinue();
-
-		connectToDB ("jdbc:mysql://localhost:3306/liveosbotdb");
 		
-		dbUp.preProc();
+		connectToDB (dbUrl);
+		
+		fCheck.checkAllFiles();
 		
 		while (true) {
 			dbUp.executeProc();
-		}
-		
+		}	
 	}
 	
 	private static void connectToDB (String dbURL) {
@@ -39,7 +40,12 @@ public class BotDatabaseConnector {
 			if (dbUp == null) {
 				System.out.println("Invalid login information.");
 			}
+			
 		} while (dbUp == null);
+		
+		
+		fCheck = new DBFileChecker (dbAuth.getDriver(), dbUrl, dbAuth.getUser(), dbAuth.getPass());
+
 	}
 	
 	public static void displayHeaderText () {
