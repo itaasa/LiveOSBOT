@@ -1,9 +1,5 @@
 package dbbotconnector;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /* ----------------------------------------------------------------------
@@ -19,46 +15,20 @@ import java.sql.SQLException;
  * 				as bots are collecting items, gaining experience/gold
  * ---------------------------------------------------------------------- */
 
-public class DBUpdater {
+public class DBUpdater extends DBEntity {
 	
 	private BotReader botRead;		
 	private BotWriter botWrite;					///Read and write to bot data text files	
 	private DBSelector dbSelect; 				//Obtains data from bot database	
-	private String driver, url, user, pass;		//Database connection information
-	
-	private Connection conn;
-	private PreparedStatement prepState;
-	private ResultSet result;
-	
+		
 	public DBUpdater(String driver, String url, String user, String pass) {
-		this.driver = driver;
-		this.url = url;
-		this.user = user;
-		this.pass = pass;
+		
+		super(driver, url, user, pass);
+
 		this.botRead = new BotReader();
 		this.botWrite = new BotWriter();	
 		
-		dbSelect = new DBSelector (this.driver, this.url, this.user, this.pass);
-		conn = getConnection();
-		prepState = null;
-		result = null;
-	}
-	
-	//Establishes connection to the database
-	public Connection getConnection() {
-		
-		try {
-			Class.forName(this.driver);
-			Connection conn = DriverManager.getConnection(this.url, this.user, this.pass);			
-			return conn;
-		
-		} catch (Exception e) {
-			System.out.println ("No connection to database!\n"
-					+ "1. Check if XAMPP server is running.\n"
-					+ "2. Check if login information is correct.");
-		}
-		
-		return null;
+		dbSelect = new DBSelector (driver, url, user, pass);
 	}
 	
 	//Updates the database with all the values passed by ALL bots currently running (this uses all methods)
@@ -158,8 +128,8 @@ public class DBUpdater {
 			prepState.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handler();
+			
 		}
 		//Resetting before value to after value
 		botWrite.writeBefore(afterValue, botId, itemId);
@@ -204,8 +174,7 @@ public class DBUpdater {
 				prepState.executeUpdate();
 			}
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				handler();
 			}
 		} 
 		
@@ -229,8 +198,7 @@ public class DBUpdater {
 					gpRate = result.getInt("GpPerHour");
 			
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				handler();
 			}
 			
 		}
@@ -272,8 +240,7 @@ public class DBUpdater {
 				prepState.executeUpdate();
 			
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				handler();
 			}
 			
 		}
@@ -330,8 +297,7 @@ public class DBUpdater {
 			prepState.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handler();
 		}
 		
 		return levelData;
@@ -366,8 +332,7 @@ public class DBUpdater {
 			prepState.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handler();
 		}
 	}
 	

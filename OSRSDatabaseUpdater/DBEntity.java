@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DBEntity {
 	
 	private String driver, url, user, pass;				//Database connection data									
-	private Connection conn;
-	private PreparedStatement prepState;
-	private ResultSet result;
+	protected Connection conn;
+	protected PreparedStatement prepState;
+	protected ResultSet result;
 	
 	public DBEntity (String driver, String url, String user, String pass) {
 		this.driver = driver;
@@ -33,16 +34,43 @@ public class DBEntity {
 			return conn;
 		
 		} catch (Exception e) {
-			System.out.println ("No connection to database!\n"
-					+ "1. Check if XAMPP server is running.\n"
-					+ "2. Check if login information is correct.");
+			handler();
 		}
 		
 		return null;
 	}
 	
 	//If an SQLException is thrown, this function will be called to handle it
-	private void close() {
+	protected void handler() {
+		System.out.println("Database connection error!\n"
+					+ "Now closing connection, prepared statement and result sets...\n"
+					+ "Stopping application...");
 		
+		try {
+			if (result!= null)
+				result.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			if (prepState != null)
+				prepState.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			if (conn != null)
+				conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.exit(0);
 	}
 }
