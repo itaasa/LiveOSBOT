@@ -10,7 +10,7 @@ public class MainBotConnector {
 	private static DBAuthenticator dbAuth;
 	private static DBUpdater dbUp;
 	private static BotFileChecker fCheck;
-	private static String dbUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
+	private static final String dbUrl = "jdbc:mysql://localhost:3306/liveosbotdb";
 	
 	public static void main (String args[]) throws Exception{
 

@@ -35,6 +35,7 @@ public class DBUpdater extends DBEntity {
 	public void executeProc() throws Exception{
 		
 		int [][] reportKeys = dbSelect.getReportKeys();
+		
 		int [] totalItemsCollected = dbSelect.getItemCounts();
 		int totalNumOfItems, numOfItems, gpRate, xpRate, numOfKeys = dbSelect.getNumOfReportKeys(), 
 				botId, itemId;
@@ -316,7 +317,7 @@ public class DBUpdater extends DBEntity {
 		return days + "d, " + hours + "h, " + minutes + "m, " + seconds + "s";
 	}		
 	
-	private void updateStatus (int botId){
+	public void updateStatus (int botId){
 		
 		int status = botRead.readStatus(botId);
 		
@@ -335,5 +336,4 @@ public class DBUpdater extends DBEntity {
 			handler();
 		}
 	}
-	
 }

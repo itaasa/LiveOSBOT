@@ -1,5 +1,7 @@
 package dbbotconnector;
 
+import java.sql.SQLException;
+
 /* ----------------------------------------------------------------------
  * WHAT: 	1.	Obtains IDs, bot names, item names, item counts from database
  *
@@ -27,7 +29,9 @@ public class DBSelector extends DBEntity {
 		int numOfReportKeys = getNumOfReportKeys();
 		int [][] reportKeys = new int [numOfReportKeys][2];
 		
-		String obtainKeys =	"SELECT BotID, ItemID FROM Report";
+		String obtainKeys =	"SELECT Report.BotID, Report.ItemID "
+						  + "FROM Report, Bot "
+						  + "WHERE IsOnline = 1 AND Report.BotId = Bot.BotId";
 		
 		prepState = conn.prepareStatement(obtainKeys);
 		result = prepState.executeQuery();
@@ -46,8 +50,10 @@ public class DBSelector extends DBEntity {
 		
 		int numOfKeys = 0;
 
-		
-		String obtainCountOfTuples = "SELECT * FROM Report";
+		String obtainCountOfTuples = "SELECT Report.BotId "
+								   + "FROM Report, Bot "
+								   + "WHERE IsOnline = 1 "
+								   + "AND Report.BotId = Bot.BotId";
 
 		prepState = conn.prepareStatement(obtainCountOfTuples);
 		result = prepState.executeQuery();
@@ -66,7 +72,8 @@ public class DBSelector extends DBEntity {
 		
 		String obtainBotName = "SELECT BotName " 
 							+ "FROM Report, Bot "
-							+ "WHERE Report.BotID = Bot.BotID";
+							+ "WHERE IsOnline = 1  "
+							+ "AND Report.BotID = Bot.BotID";
 		
 		prepState = conn.prepareStatement(obtainBotName);
 		result = prepState.executeQuery();
@@ -88,8 +95,10 @@ public class DBSelector extends DBEntity {
 		String [] itemNames = new String [numOfKeys];
 		
 		String obtainBotName =  "SELECT ItemName " 
-							+ "FROM Report, Item "
-							+ "WHERE Report.ItemID = Item.ItemID";
+							+ "FROM Report, Item, Bot "
+							+ "WHERE Report.ItemID = Item.ItemID "
+							+ "AND IsOnline = 1 "
+							+ "AND Report.BotID = Bot.BotID";
 	
 		prepState = conn.prepareStatement(obtainBotName);
 		result = prepState.executeQuery();
@@ -112,7 +121,9 @@ public class DBSelector extends DBEntity {
 		int [] totalItems = new int [numOfKeys];
 		
 		String obtainNumOfItems =  "SELECT NumOfItems " 
-							+ "FROM Report";
+							+ "FROM Report, Bot "
+							+ "WHERE IsOnline = 1 "
+							+ "AND Report.BotID = Bot.BotID";
 		
 		prepState = conn.prepareStatement(obtainNumOfItems);
 		result = prepState.executeQuery();
@@ -125,5 +136,40 @@ public class DBSelector extends DBEntity {
 		}
 		
 		return totalItems;
+	}
+	
+	public int getTotalNumOfBots() throws SQLException {
+		
+		int botCount = 0;
+		String obtainTotalBots =  "SELECT * FROM Bot";
+		
+		prepState = conn.prepareStatement(obtainTotalBots);
+		result = prepState.executeQuery();
+		
+		result.last();
+		botCount = result.getRow();
+		
+		return botCount;
+	}
+	
+	public int [] getAllBotIDs() throws SQLException {
+		
+		int numOfKeys = getTotalNumOfBots();
+		
+		int [] botIds = new int [numOfKeys];
+		
+		String obtainBotName =  "SELECT BotId FROM Bot";
+	
+		prepState = conn.prepareStatement(obtainBotName);
+		result = prepState.executeQuery();
+	
+		int i=0;
+	
+		while (result.next()) {
+			botIds[i] = result.getInt("BotId");
+			i++;
+		}
+		
+		return botIds;
 	}
 }

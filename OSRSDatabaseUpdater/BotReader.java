@@ -5,6 +5,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/* ----------------------------------------------------------------------
+ * WHAT: 	1.	Reads live bot data from data text files which are 
+ * 				updated by the bot scripts
+ *
+ * HOW: 	1. 	Reads from text file and returns values found (FileReader,
+ * 				BufferedReader)
+ *			
+ * WHY:		1. 	Information sent by the bot scripts need to be processed 
+ * 				and or sent to the database
+ * ---------------------------------------------------------------------- */
+
 public class BotReader {
 	
 	//File access objects

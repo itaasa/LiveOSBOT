@@ -3,6 +3,7 @@ package dbbotconnector;
 import java.io.File;
 import java.io.IOException;
 
+
 /* ----------------------------------------------------------------------
  * WHAT: 	1.	Will check if any necessary files have been created to store
  *				bot data, otherwise, this class creates them
@@ -19,9 +20,11 @@ import java.io.IOException;
 public class BotFileChecker {
 	
 	private DBSelector dbSelect;
+	private DBUpdater dbUpdate;
 	
 	public BotFileChecker (String driver, String url, String user, String pass) {
 		dbSelect = new DBSelector (driver, url, user, pass);
+		dbUpdate = new DBUpdater (driver, url, user, pass);
 	}
 	
 	//Creates all necessary files not already created
@@ -29,6 +32,18 @@ public class BotFileChecker {
 	public void checkAllFiles() throws Exception {
 		
 		int [][] reportKeys = dbSelect.getReportKeys();
+		
+		int tempCount = 0;
+		
+		while (reportKeys.length == 0) {
+			System.out.println("No bots are not online... Now waiting for bot(s) to be active.");
+			preProc();
+			Thread.sleep(5000);
+			tempCount++;
+			System.out.println("Time elapsed: " + tempCount*5 + " seconds");
+			
+			reportKeys = dbSelect.getReportKeys();
+		}
 		
 		System.out.println("Now checking if necessary files exist...");
 		Thread.sleep(1000);
@@ -103,4 +118,12 @@ public class BotFileChecker {
 			file.createNewFile();
 		}
 	}
+	
+	private void preProc() throws Exception {
+		int [] botIds = dbSelect.getAllBotIDs();
+		
+		for (int i=0; i<botIds.length; i++) {
+			dbUpdate.updateStatus(botIds[i]);
+		}
+	}	
 }

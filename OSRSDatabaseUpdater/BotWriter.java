@@ -4,6 +4,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/* ----------------------------------------------------------------------
+ * WHAT: 	1.	Methods called by bot scripts will write to bot data 
+ * 				text files
+ *
+ * HOW: 	1. 	Data is passed by parameters of bots and is then written 
+ * 				to text file (FileWriter, PrintWriter)
+ *			
+ * WHY:		1. 	Data needs to be written by the bots in a readable and more
+ * 				manageable way 
+ * ---------------------------------------------------------------------- */
+
 public class BotWriter {
 
 	//File access objects
@@ -39,10 +50,7 @@ public class BotWriter {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+		
 	//Writes to "invCountBefore_botId_itemId.txt" the current inventory count of the bot with id=botId 
 	//and collecting item with id=itemId when called
 	public void writeBefore (int invCount, int botId, int itemId) {
@@ -61,11 +69,7 @@ public class BotWriter {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	
+		
 	//Write online status to "onlineStatus_botId.txt" for bot with id=botId
 	public void writeStatus (int botId, int status) {
 		
@@ -82,9 +86,6 @@ public class BotWriter {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 	
 	
 	//Writes to file the currentLevel of botSkill and the xpNextLevel
