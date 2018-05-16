@@ -107,4 +107,20 @@ public class BotWriter {
 			e.printStackTrace();
 		}
 	}
+	
+	//Writes to bot text file which world they are in
+	public void writeWorldData (int botId, int world) {
+		String worldPath = botDataPath + File.separator + 
+				"worlddata" + File.separator + "world" + "_" + botId + ".txt";
+		
+		try {
+			fWrite = new FileWriter (worldPath);
+			pWrite = new PrintWriter (fWrite);
+			pWrite.println(Integer.toString(world));
+			pWrite.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

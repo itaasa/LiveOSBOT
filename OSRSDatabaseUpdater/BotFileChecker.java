@@ -3,7 +3,6 @@ package dbbotconnector;
 import java.io.File;
 import java.io.IOException;
 
-
 /* ----------------------------------------------------------------------
  * WHAT: 	1.	Will check if any necessary files have been created to store
  *				bot data, otherwise, this class creates them
@@ -34,13 +33,14 @@ public class BotFileChecker {
 		int [][] reportKeys = dbSelect.getReportKeys();
 		
 		int tempCount = 0;
+		preProc();
 		
 		while (reportKeys.length == 0) {
-			System.out.println("No bots are not online... Now waiting for bot(s) to be active.");
+			System.out.println("No bots are online... Now waiting for bot(s) to be active.");
 			preProc();
 			Thread.sleep(5000);
 			tempCount++;
-			System.out.println("Time elapsed: " + tempCount*5 + " seconds");
+			System.out.println("Time elapsed: " + tempCount * 5 + " seconds");
 			
 			reportKeys = dbSelect.getReportKeys();
 		}
@@ -48,10 +48,11 @@ public class BotFileChecker {
 		System.out.println("Now checking if necessary files exist...");
 		Thread.sleep(1000);
 		
-		for (int i=0; i<dbSelect.getNumOfReportKeys(); i++){
+		for (int i=0; i<reportKeys.length; i++){
 			invCountExists(reportKeys[i][0], reportKeys[i][1]);
 			levelCountExists(reportKeys[i][0], reportKeys[i][1]);
 			statusExists(reportKeys[i][0]);
+			worldExists(reportKeys[i][0]);
 		}
 		
 		System.out.println("All necessary files exists! Now starting application...");
@@ -114,6 +115,19 @@ public class BotFileChecker {
 		
 		if (!file.isFile()) {
 			System.out.println("Missing onlineStatus textfile for bot: " + botId);
+			System.out.println("Now creating that file...\n");
+			file.createNewFile();
+		}
+	}
+	
+	private void worldExists (int botId) throws IOException {
+		String pathString = System.getProperty("user.dir") + File.separator + 
+				"worlddata" + File.separator + "world" + "_" + botId + ".txt";
+		
+		File file = new File (pathString);
+		
+		if (!file.isFile()) {
+			System.out.println("Missing world textfile for bot: " + botId);
 			System.out.println("Now creating that file...\n");
 			file.createNewFile();
 		}

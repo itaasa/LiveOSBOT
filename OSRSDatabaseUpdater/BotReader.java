@@ -146,4 +146,32 @@ public class BotReader {
 
 		return result;
 	}
+	
+	
+	public int readWorld(int botId) {
+		String path = botDataPath + File.separator + 
+				"worlddata" + File.separator + "world" + "_" + botId + ".txt";
+		
+
+		int result = 0;
+		String buff;
+		
+		try {
+			fRead = new FileReader (path);
+			bRead = new BufferedReader (fRead);
+			
+			while((buff = bRead.readLine()) != null) {
+				result = Integer.parseInt(buff);
+			}
+			
+			bRead.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
 }

@@ -56,8 +56,8 @@ public class DBAuthenticator {
 		Console console = System.console();
 		this.pass = String.valueOf(console.readPassword("Enter password: "));
 		
-		/*System.out.print("Enter password: ");
-		this.pass = sc.next();*/
+		//System.out.print("Enter password: ");
+		//this.pass = sc.next();
 	}
 	
 	public void setDBUrl (String dbUrl) {

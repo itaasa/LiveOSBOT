@@ -69,6 +69,7 @@ public class DBUpdater extends DBEntity {
 			
 			updateLevelData(xpRate, botId, itemId);
 			updateStatus(botId);
+			updateWorld(botId);
 			
 			System.out.println(	"||\t" + botId + "\t|" + 
 								"|\t" + itemId + "\t|" + 
@@ -329,6 +330,24 @@ public class DBUpdater extends DBEntity {
 			prepState = conn.prepareStatement(updateQuery);
 	
 			prepState.setInt(1, status);
+			prepState.setInt(2, botId);
+			prepState.executeUpdate();
+			
+		} catch (SQLException e) {
+			handler();
+		}
+	}
+	
+	public void updateWorld (int botId) {
+		int world = botRead.readWorld(botId);
+		
+		String updateQuery = "UPDATE Bot "
+							+ "SET World = ? "
+							+ "WHERE BotID = ?";
+		
+		try {
+			prepState = conn.prepareStatement(updateQuery);
+			prepState.setInt(1, world);
 			prepState.setInt(2, botId);
 			prepState.executeUpdate();
 			
