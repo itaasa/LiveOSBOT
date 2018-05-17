@@ -2,24 +2,32 @@ package scripts;
 
 import org.tribot.api2007.Banking;
 import org.tribot.api2007.Inventory;
+import org.tribot.api2007.Login;
 import org.tribot.api2007.Objects;
 import org.tribot.api2007.Player;
+import org.tribot.api2007.Skills;
 import org.tribot.api2007.WebWalking;
+import org.tribot.api2007.WorldHopper;
+import org.tribot.api2007.Skills.SKILLS;
 import org.tribot.api2007.types.RSArea;
 import org.tribot.api2007.types.RSObject;
 import org.tribot.api2007.types.RSTile;
 import org.tribot.script.Script;
 import org.tribot.script.ScriptManifest;
 
+import dbbotconnector.BotWriter;
+
 @ScriptManifest (authors = {"Polygon Window"}, category = "Woodcutting", name = "Normal Tree Woodcutter")
 
 public class NormalTreeWoodcutter extends Script {
 
+	BotWriter botWrite = new BotWriter();
 	
 	//The following are ID's of in-game object needed to be referenced in the script
 	private final int BRONZE_AXE_ID = 1351;
-	private final int NORMAL_TREE_ID [] = {1276, 1278};
+	private final int NORMAL_TREE_ID [] = {1276};
 	private final int LOG_ID = 1511;
+	private final int botId = 1;
 	
 	//The following data for tiles (coordinates in game) used to describe the tree area the bot will obtain trees
 	private final int areaRadius = 8;
@@ -29,17 +37,26 @@ public class NormalTreeWoodcutter extends Script {
 	//Timer will be used to ensure bot is more human like
 	Timer time = new Timer(3000);
 	
-	//The following object will write to the database data that bot collects overtime
-	static DBUpdater db = new DBUpdater (
-			"com.mysql.jdbc.Driver",
-			"jdbc:mysql://localhost:3306/liveosbotdb",
-			"root", "");
-	
 	public boolean onStart() {
 		
-		//Setting the inventory text files counts to the current inventory count of the bot
-		db.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
-		db.writeBefore(Inventory.getCount(LOG_ID), 0, 1511);
+		
+		if (Login.getLoginState() == Login.STATE.INGAME) {
+			
+			println ("Bot is online, now writing start up data...");
+			botWrite.writeStatus(botId, 1);
+			botWrite.writeAfter(Inventory.getCount(LOG_ID), botId, LOG_ID);
+			botWrite.writeBefore(Inventory.getCount(LOG_ID), botId, LOG_ID);
+			botWrite.writeLevelData(Skills.getCurrentLevel(SKILLS.WOODCUTTING), 
+									Skills.getXP(SKILLS.WOODCUTTING), 
+									Skills.getXPToNextLevel(SKILLS.WOODCUTTING), 
+									botId, LOG_ID);
+			
+			botWrite.writeWorldData(botId, WorldHopper.getWorld());
+		}
+		
+		else
+			botWrite.writeStatus(botId, 0);
+		
 		return true;
 	}
 	
@@ -49,15 +66,27 @@ public class NormalTreeWoodcutter extends Script {
 			while(true){
 				loop();
 				sleep (150);
+				
+				if (Login.getLoginState() == Login.STATE.UNKNOWN || Login.getLoginState() == Login.STATE.LOGINSCREEN)
+					break;
 			}
+		
+		println ("Now writing the bot as offline.");
+		botWrite.writeStatus(botId, 0);
+		
 	}
 	
 	private boolean loop ()
 	{
-		db.writeAfter(Inventory.getCount(LOG_ID), 0, 1511);
-		
+		botWrite.writeAfter(Inventory.getCount(LOG_ID), botId, LOG_ID);	
+		botWrite.writeLevelData(Skills.getCurrentLevel(SKILLS.WOODCUTTING), 
+				Skills.getXP(SKILLS.WOODCUTTING), 
+				Skills.getXPToNextLevel(SKILLS.WOODCUTTING), 
+				botId, LOG_ID);
+				
 		//First we check if bot has a full inventory, if so we must deposit excess items to the nearest bank
 		if (Inventory.isFull()){
+			println ("Inventory is full, now going to bank...");
 			bankTrip();
 		}
 		
@@ -69,6 +98,7 @@ public class NormalTreeWoodcutter extends Script {
 			}
 			
 			else {
+				println ("Moving to tree area...");
 				moveToTreeArea();
 			}
 		}
@@ -85,13 +115,17 @@ public class NormalTreeWoodcutter extends Script {
 			
 			if (foundTree != null) {
 				if (foundTree.isOnScreen()) {
-					foundTree.click("Chop down");
-					time.reset();
+					if (foundTree.isClickable()) {
+						foundTree.click("Chop down");
+						time.reset();
+					}
 					while (Player.getRSPlayer().getAnimation() == -1 && time.isRunning()){
 						sleep(10);
 					}
 				}
 			}
+			else
+				println ("No tree was found...");
 		}
 		
 	}

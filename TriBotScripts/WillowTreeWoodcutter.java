@@ -7,6 +7,7 @@ import org.tribot.api2007.Login;
 import org.tribot.api2007.Objects;
 import org.tribot.api2007.Player;
 import org.tribot.api2007.WebWalking;
+import org.tribot.api2007.WorldHopper;
 import org.tribot.api2007.types.RSArea;
 import org.tribot.api2007.types.RSObject;
 import org.tribot.api2007.types.RSTile;
@@ -20,7 +21,7 @@ import dbbotconnector.BotWriter;
 public class WillowTreeWoodcutter extends Script {
 	
 	BotWriter botWrite = new BotWriter ();
-	private final int botId = 4;
+	private final int botId = 0;
 	
 	//ItemID's to be referenced later
 	private final int WILLOW_TREE_ID [] = {1750, 1756};
@@ -29,7 +30,6 @@ public class WillowTreeWoodcutter extends Script {
 	private final int treeAreaRadius = 9;
 	private final RSTile treeCenter = new RSTile (2968, 3197, 0);
 	private final RSArea treeArea = new RSArea (treeCenter, treeAreaRadius);
-	
 	Timer time = new Timer (3000);
 
 	
@@ -51,22 +51,25 @@ public class WillowTreeWoodcutter extends Script {
 	
 	private boolean onStart() {
 		
-		if (Login.getLoginState() == Login.STATE.INGAME) {
-			println("Ducktails");
+		if (Login.getLoginState() == Login.STATE.INGAME) {			
 			botWrite.writeStatus(botId, 1);
+			botWrite.writeBefore(Inventory.getCount(WILLOW_LOG_ID), botId, WILLOW_LOG_ID);
 			botWrite.writeAfter(Inventory.getCount(WILLOW_LOG_ID), botId, WILLOW_LOG_ID);
 			botWrite.writeBefore(Inventory.getCount(WILLOW_LOG_ID), botId, WILLOW_LOG_ID);
 			botWrite.writeLevelData(Skills.getCurrentLevel(SKILLS.WOODCUTTING), 
 									Skills.getXP(SKILLS.WOODCUTTING), 
 									Skills.getXPToNextLevel(SKILLS.WOODCUTTING), 
 									botId, WILLOW_LOG_ID);
+			
+			botWrite.writeWorldData(botId, WorldHopper.getWorld());
 		}
+		
 		else
 			botWrite.writeStatus(botId, 0);
 		
 		return true;
 	}
-	
+
 	private boolean loop() {
 		
 		botWrite.writeAfter(Inventory.getCount(WILLOW_LOG_ID), botId, WILLOW_LOG_ID);
@@ -75,8 +78,10 @@ public class WillowTreeWoodcutter extends Script {
 				Skills.getXPToNextLevel(SKILLS.WOODCUTTING), 
 				botId, WILLOW_LOG_ID);
 		
-		if (Inventory.isFull())
+		if (Inventory.isFull()) {
+			println ("Bot has full inventory, now dropping logs...");
 			Inventory.drop(WILLOW_LOG_ID);
+		}
 		
 		else {
 		
