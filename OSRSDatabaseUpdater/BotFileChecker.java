@@ -33,17 +33,17 @@ public class BotFileChecker {
 		int [][] reportKeys = dbSelect.getReportKeys();
 		
 		int tempCount = 0;
-		preProc();
+		dbUpdate.updateAllBotStatus();
 		
 		while (reportKeys.length == 0) {
 			System.out.println("No bots are online... Now waiting for bot(s) to be active.");
-			preProc();
+			dbUpdate.updateAllBotStatus();
 			Thread.sleep(5000);
 			tempCount++;
 			System.out.println("Time elapsed: " + tempCount * 5 + " seconds");
 			
 			reportKeys = dbSelect.getReportKeys();
-		}
+		} 
 		
 		System.out.println("Now checking if necessary files exist...");
 		Thread.sleep(1000);
@@ -133,11 +133,4 @@ public class BotFileChecker {
 		}
 	}
 	
-	private void preProc() throws Exception {
-		int [] botIds = dbSelect.getAllBotIDs();
-		
-		for (int i=0; i<botIds.length; i++) {
-			dbUpdate.updateStatus(botIds[i]);
-		}
-	}	
 }

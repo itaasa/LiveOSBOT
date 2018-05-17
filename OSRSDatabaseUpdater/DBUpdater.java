@@ -68,7 +68,7 @@ public class DBUpdater extends DBEntity {
 			xpRate = updateXPRate(numOfItems, botId, itemId);
 			
 			updateLevelData(xpRate, botId, itemId);
-			updateStatus(botId);
+			updateAllBotStatus();
 			updateWorld(botId);
 			
 			System.out.println(	"||\t" + botId + "\t|" + 
@@ -82,7 +82,7 @@ public class DBUpdater extends DBEntity {
 		
 		System.out.println("||--------------------------------------------------------------------------------------------------------------------------------------------------------------||");
 		
-		Thread.sleep(7000);
+		Thread.sleep(5000);
 	}
 	
 	//Updates the numOfItems collected by the bot given the botId and the itemId of the item they are collecting
@@ -337,6 +337,14 @@ public class DBUpdater extends DBEntity {
 			handler();
 		}
 	}
+	
+	public void updateAllBotStatus() throws Exception {
+		int [] botIds = dbSelect.getAllBotIDs();
+		
+		for (int i=0; i<botIds.length; i++) {
+			updateStatus(botIds[i]);
+		}
+	}	
 	
 	public void updateWorld (int botId) {
 		int world = botRead.readWorld(botId);
