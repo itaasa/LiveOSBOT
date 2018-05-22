@@ -3,7 +3,7 @@
 ### What?
 
 Actions in-game are automated through bots.
-The following project allows the user to monitor their OldSchool RuneScape bots live through their Android phones! Every few seconds a MySQL database updated with bot data is sent by a Java application I created in Java, which establishes a connection with the each bot. It can access the bot data such as current skill levels, items collected, time to level up, etc. Now, along with an Android Application rightly named LiveOSBOT, the user can view the database from their phones. Thus, live data from each bot can now be read at your fingertips, without being invested into the game.
+The following project allows the user to monitor their OldSchool RuneScape bots live through their Android phones! Every few seconds a MySQL database updated with bot data is sent by a Java application I created in Java, which establishes a connection with the each bot. It can access each bot's data such as current skill levels, items collected, time to level up, etc. Now, along with an Android Application rightly named LiveOSBOT, the user can view the database from their phones. Thus, live data from each bot can now be read at your fingertips, without being invested into the game.
 
 ### Why?
 
