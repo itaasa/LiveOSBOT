@@ -7,7 +7,7 @@
 
        $query = "SELECT User, Pass FROM user WHERE User = '$username' AND Pass = '$password'";
 
-        $result = mysqli_query($conn, $query);
+        $result = mysqli_prepare($conn, $query);
 
         if ($result->num_rows > 0)
           echo "success";
